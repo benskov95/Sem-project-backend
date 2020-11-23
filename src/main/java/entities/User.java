@@ -37,8 +37,12 @@ public class User implements Serializable {
   @Column(name = "profile_pic")
   private String profilePicture;
   
-  @ManyToMany (cascade = CascadeType.PERSIST)
-  private List<Meme> favoriteMemes = new ArrayList<>();
+  @ManyToMany(mappedBy = "upvoters", cascade = CascadeType.PERSIST)
+  private List<Meme> upvotedMemes = new ArrayList<>();
+  
+  
+  @ManyToMany(mappedBy = "downvoters", cascade = CascadeType.PERSIST)
+  private List<Meme> downvotedMemes = new ArrayList<>();
 
   public List<String> getRolesAsStrings() {
     if (roleList.isEmpty()) {
@@ -102,12 +106,20 @@ public class User implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public List<Meme> getFavoriteMemes() {
-        return favoriteMemes;
+    public List<Meme> getUpvotedMemes() {
+        return upvotedMemes;
     }
 
-    public void setFavoriteMemes(List<Meme> favoriteMemes) {
-        this.favoriteMemes = favoriteMemes;
+    public void setUpvotedMemes(List<Meme> upvotedMemes) {
+        this.upvotedMemes = upvotedMemes;
+    }
+
+    public List<Meme> getDownvotedMemes() {
+        return downvotedMemes;
+    }
+
+    public void setDownvotedMemes(List<Meme> downvotedMemes) {
+        this.downvotedMemes = downvotedMemes;
     }
     
 }

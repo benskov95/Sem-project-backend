@@ -32,11 +32,13 @@ public class Meme implements Serializable {
     @Column(name = "title")
     private String title;
     
-    @Column(name = "upvotes")
-    private int upvotes;
+    @ManyToMany
+    @JoinTable(name = "upvotes")
+    private List<User> upvoters = new ArrayList<>();
     
-    @Column(name = "downvotes")
-    private int downvotes;
+    @ManyToMany
+    @JoinTable(name = "downvotes")
+    private List<User> downvoters = new ArrayList<>();
     
     @OneToMany(mappedBy = "meme", cascade = CascadeType.PERSIST)
     private List<Comment> comments = new ArrayList<>();
@@ -47,8 +49,6 @@ public class Meme implements Serializable {
     public Meme(String image, String title) {
         this.image = image;
         this.title = title;
-        this.upvotes = 0;
-        this.downvotes = 0;
     }
 
     public int getId() {
@@ -83,20 +83,20 @@ public class Meme implements Serializable {
         this.comments = comments;
     }
 
-    public int getUpvotes() {
-        return upvotes;
+    public List<User> getUpvoters() {
+        return upvoters;
     }
 
-    public void setUpvotes(int upvotes) {
-        this.upvotes = upvotes;
+    public void setUpvoters(List<User> upvoters) {
+        this.upvoters = upvoters;
     }
 
-    public int getDownvotes() {
-        return downvotes;
+    public List<User> getDownvoters() {
+        return downvoters;
     }
 
-    public void setDownvotes(int downvotes) {
-        this.downvotes = downvotes;
+    public void setDownvoters(List<User> downvoters) {
+        this.downvoters = downvoters;
     }
     
 }
