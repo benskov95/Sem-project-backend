@@ -9,7 +9,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
-import fetchers.ExampleFetcher;
 
 @Path("example")
 public class ExampleResource {
@@ -23,9 +22,7 @@ public class ExampleResource {
     @RolesAllowed({"user", "admin"})
     public String getData() throws IOException, InterruptedException, ExecutionException, TimeoutException {
 
-        String data = ExampleFetcher.fetchData(es,gson);
-
-        return data;
+       return null;
     }
 
    
