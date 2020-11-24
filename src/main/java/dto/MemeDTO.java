@@ -18,6 +18,10 @@ public class MemeDTO {
         this.imageUrl = cat.getUrl();
     }
 
+    public MemeDTO(YesOrNoDTO yesOrNo){
+        this.imageUrl = yesOrNo.getImage();
+    }
+
     public String getTitle() {
         return title;
     }

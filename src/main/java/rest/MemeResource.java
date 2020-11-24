@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fetchers.CatFetcher;
 import fetchers.FunnyFetcher;
+import fetchers.YesOrNoFetcher;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -41,6 +42,16 @@ public class MemeResource {
         String cats = CatFetcher.fetchCat(es,gson);
 
         return cats;
+    }
+
+    @GET
+    @Path("/yesorno")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getYesOrNo () throws InterruptedException, ExecutionException, TimeoutException {
+
+        String yesOrNo = YesOrNoFetcher.fetchYesOrNo(es,gson);
+
+        return yesOrNo;
     }
 
 
