@@ -11,10 +11,12 @@ import java.util.concurrent.*;
 public class FunnyFetcher {
 
     private static String funnyURL = "https://meme-api.herokuapp.com/gimme/";
-    private static ArrayList<MemeDTO> tasks = new ArrayList<>();
     private static int numberOfTasks = 5;
 
     public static String fetchFunny(ExecutorService threadpool, Gson gson) throws InterruptedException, ExecutionException, TimeoutException {
+
+        ArrayList<MemeDTO> tasks = new ArrayList<>();
+
 
         Callable<FunnyDTO> funnyTask = new Callable<FunnyDTO>() {
             @Override
