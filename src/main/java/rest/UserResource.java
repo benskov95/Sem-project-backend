@@ -59,6 +59,7 @@ public class UserResource {
     }
 
     @POST
+    @RolesAllowed("admin")
     @Path("/ban/{username}")
     @Produces({MediaType.APPLICATION_JSON})
     public String banUser (@PathParam("username") String username) {
@@ -67,6 +68,7 @@ public class UserResource {
     }
 
     @POST
+    @RolesAllowed("admin")
     @Path("/unban/{username}")
     @Produces({MediaType.APPLICATION_JSON})
     public String unbanUser(@PathParam("username") String username){
