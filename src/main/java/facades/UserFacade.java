@@ -157,4 +157,27 @@ public class UserFacade {
         }
         return new UserDTO(user);
     }
+
+    public UserDTO unbanUser(String username) {
+
+        EntityManager em = emf.createEntityManager();
+
+        User user = em.find(User.class, username);
+
+        Query query = em.createQuery("SELECT r from Role r where r.roleName = 'user'");
+        Role role = (Role) query.getSingleResult();
+
+        user.getRoleList().clear();
+        user.getRoleList().add(role);
+
+        try{
+            em.getTransaction().begin();
+            em.persist(user);
+            em.getTransaction().commit();
+        }finally {
+
+            em.close();
+        }
+        return new UserDTO(user);
+    }
 }

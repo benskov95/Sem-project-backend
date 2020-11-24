@@ -66,5 +66,15 @@ public class UserResource {
         return GSON.toJson(userDTO);
     }
 
+    @POST
+    @Path("/unban/{username}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String unbanUser(@PathParam("username") String username){
+
+        UserDTO userDTO = USER_FACADE.unbanUser(username);
+
+        return GSON.toJson(userDTO);
+    }
+
 
 }
