@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fetchers.CatFetcher;
 import fetchers.FunnyFetcher;
 
 import javax.ws.rs.GET;
@@ -24,15 +25,23 @@ public class MemeResource {
     @GET
     @Path("/funny")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getData() throws IOException, InterruptedException, ExecutionException, TimeoutException {
+    public String getFunny() throws IOException, InterruptedException, ExecutionException, TimeoutException {
 
-        String data = FunnyFetcher.fetchFunny(es,gson);
+        String funnys = FunnyFetcher.fetchFunny(es,gson);
 
-        return data;
+        return funnys;
     }
 
 
+    @GET
+    @Path("/cat")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getCat () throws InterruptedException, ExecutionException, TimeoutException {
 
+        String cats = CatFetcher.fetchCat(es,gson);
+
+        return cats;
+    }
 
 
    

@@ -13,6 +13,11 @@ public class MemeDTO {
         this.imageUrl = funny.getUrl();
     }
 
+    public MemeDTO(CatDTO cat) {
+        this.title = cat.getId();
+        this.imageUrl = cat.getUrl();
+    }
+
     public String getTitle() {
         return title;
     }
