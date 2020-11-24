@@ -7,6 +7,7 @@ import facades.UserFacade;
 import security.errorhandling.AuthenticationException;
 import utils.EMF_Creator;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
@@ -54,7 +55,14 @@ public class UserResource {
     @RolesAllowed("admin")
     public String deletePerson(@PathParam("userName") String userName) {
         UserDTO userDTO = USER_FACADE.deleteUser(userName);
+        return GSON.toJson(userDTO);
+    }
 
+    @POST
+    @Path("/ban/{username}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String banUser (@PathParam("username") String username) {
+        UserDTO userDTO = USER_FACADE.banUser(username);
         return GSON.toJson(userDTO);
     }
 
