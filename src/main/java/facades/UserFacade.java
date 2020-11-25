@@ -55,6 +55,9 @@ public class UserFacade {
             if (user == null || !user.verifyPassword(password)) {
                 throw new AuthenticationException("Invalid user name or password");
             }
+            if(user.getRoleList().get(0).getRoleName().equals("banned")){
+                throw new AuthenticationException("You are banned!");
+            }
         } finally {
             em.close();
         }
@@ -177,8 +180,53 @@ public class UserFacade {
             em.getTransaction().begin();
             em.persist(new Role("user"));
             em.persist(new Role("admin"));
+            em.persist(new Role("banned"));
             em.getTransaction().commit();
         }
     }
-    
+
+    public UserDTO banUser(String username) {
+
+        EntityManager em = emf.createEntityManager();
+
+        User user = em.find(User.class, username);
+
+        Query query = em.createQuery("SELECT r from Role r where r.roleName = 'banned'");
+        Role role = (Role) query.getSingleResult();
+
+        user.getRoleList().clear();
+        user.getRoleList().add(role);
+
+        try{
+            em.getTransaction().begin();
+            em.persist(user);
+            em.getTransaction().commit();
+            }finally {
+            em.close();
+        }
+        return new UserDTO(user);
+    }
+
+    public UserDTO unbanUser(String username) {
+
+        EntityManager em = emf.createEntityManager();
+
+        User user = em.find(User.class, username);
+
+        Query query = em.createQuery("SELECT r from Role r where r.roleName = 'user'");
+        Role role = (Role) query.getSingleResult();
+
+        user.getRoleList().clear();
+        user.getRoleList().add(role);
+
+        try{
+            em.getTransaction().begin();
+            em.persist(user);
+            em.getTransaction().commit();
+        }finally {
+
+            em.close();
+        }
+        return new UserDTO(user);
+    }
 }
