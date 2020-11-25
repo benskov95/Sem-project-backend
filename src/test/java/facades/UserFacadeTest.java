@@ -111,10 +111,6 @@ public class UserFacadeTest {
 
     }
 
-    @Test
-    public void testBanUser() {
-        facade.
-    }
 
 }
 

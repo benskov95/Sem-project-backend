@@ -53,5 +53,11 @@ public class Role implements Serializable {
 
     public void setUserList(List<User> userList) {
         this.userList = userList;
-    }   
+    }
+
+    @Override
+    public String toString() {
+        return roleName;
+
+    }
 }
