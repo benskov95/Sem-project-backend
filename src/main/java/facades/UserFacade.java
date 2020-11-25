@@ -3,6 +3,7 @@ package facades;
 import dto.UserDTO;
 import entities.Role;
 import entities.User;
+import errorhandling.MissingInput;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
@@ -60,7 +61,7 @@ public class UserFacade {
         return user;
     }
 
-    public List<UserDTO> getAllUsers (){
+    public List<UserDTO> getAllUsers() {
 
         EntityManager em = emf.createEntityManager();
 
@@ -81,13 +82,13 @@ public class UserFacade {
 
     }
 
-    public UserDTO addUser (UserDTO userDTO) throws  AuthenticationException {
+    public UserDTO addUser(UserDTO userDTO) throws  AuthenticationException {
 
         EntityManager em = emf.createEntityManager();
         User user = new User(userDTO.getUsername(), userDTO.getPassword());
         addInitialRoles(em);
         checkRole(user, em);
-        checkIfExists(user, em);
+        checkIfExists(userDTO, em);
         try{
             em.getTransaction().begin();
             em.persist(user);
@@ -98,16 +99,64 @@ public class UserFacade {
             em.close();
         }
     }
+    
+    public UserDTO editUser(UserDTO userDTO, String username) throws MissingInput, AuthenticationException {
+        EntityManager em = emf.createEntityManager();
+        User user = em.find(User.class, username);
+        
+        checkInput(userDTO);
+        if (!user.getUsername().equals(userDTO.getUsername())) {
+            checkIfExists(userDTO, em);
+        }
+        
+        user.setUsername(userDTO.getUsername());
+        user.setProfilePicture(userDTO.getProfilePicture());
+        
+        try {
+            em.getTransaction().begin();
+            em.persist(user);
+            em.getTransaction().commit();
+            return new UserDTO(user);
+        } finally {
+            em.close();
+        }
+    }
+    
+    public void changePassword(UserDTO currentDTO, String newPassword) {
+        EntityManager em = emf.createEntityManager();
+        User currentUser = em.find(User.class, currentDTO.getUsername());
+        
+        if (currentUser.verifyPassword(currentDTO.getPassword())) {
+            currentUser.setUserPass(newPassword);
+            
+            try {
+                em.getTransaction().begin();
+                em.persist(currentUser);
+                em.getTransaction().commit();
+            } finally {
+                em.close();
+            }
+        }
+    }
 
-    private void checkIfExists(User user, EntityManager em) throws AuthenticationException {
+    private void checkIfExists(UserDTO userDTO, EntityManager em) throws AuthenticationException {
 
         Query query = em.createQuery("SELECT u FROM User u WHERE u.username =:username ");
-        query.setParameter("username", user.getUsername());
+        query.setParameter("username", userDTO.getUsername());
 
        List<User> result = query.getResultList();
         if(result.size() > 0){
             throw new AuthenticationException("A user with this username already exists!");
         }
+    } 
+    
+    private void checkInput(UserDTO userDTO) throws MissingInput {
+        if (userDTO.getUsername().isEmpty() ||
+            userDTO.getProfilePicture().isEmpty())
+        {
+            throw new MissingInput("All fields must be filled out.");
+        } 
+        
     }
 
     public void checkRole(User user, EntityManager em){

@@ -3,6 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dto.UserDTO;
+import errorhandling.MissingInput;
 import facades.UserFacade;
 import security.errorhandling.AuthenticationException;
 import utils.EMF_Creator;
@@ -30,14 +31,6 @@ public class UserResource {
         int numberOfUsers = USER_FACADE.getAllUsers().size();
         return "{\"count\":" + numberOfUsers + "}";
     }
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public String addUser(String user) throws  AuthenticationException {
-        UserDTO userDTO = GSON.fromJson(user, UserDTO.class);
-        UserDTO newUser = USER_FACADE.addUser(userDTO);
-        return GSON.toJson(newUser);
-    }
     
     @GET
     @RolesAllowed("admin")
@@ -49,14 +42,32 @@ public class UserResource {
     }
 
     @DELETE
-    @Path("{userName}")
+    @Path("{username}")
     @Produces({MediaType.APPLICATION_JSON})
     @RolesAllowed("admin")
-    public String deletePerson(@PathParam("userName") String userName) {
+    public String deleteUser(@PathParam("username") String userName) {
         UserDTO userDTO = USER_FACADE.deleteUser(userName);
 
         return GSON.toJson(userDTO);
     }
-
+    
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String addUser(String user) throws  AuthenticationException {
+        UserDTO userDTO = GSON.fromJson(user, UserDTO.class);
+        UserDTO newUser = USER_FACADE.addUser(userDTO);
+        return GSON.toJson(newUser);
+    }
+    
+    @PUT
+    @Path("{username}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String editUser(@PathParam("username") String currentName, String user) throws MissingInput, AuthenticationException {
+        UserDTO userDTO = GSON.fromJson(user, UserDTO.class);
+        UserDTO editedUser = USER_FACADE.editUser(userDTO, currentName);
+        return GSON.toJson(editedUser);
+    }
 
 }
