@@ -27,7 +27,7 @@ public class UserFacadeTest {
 
     private static EntityManagerFactory emf;
     private static UserFacade facade;
-    private static User user, admin, both;
+    private static User user, admin, banned;
 
 
     public UserFacadeTest() {
@@ -51,22 +51,24 @@ public class UserFacadeTest {
         EntityManager em = emf.createEntityManager();
         user = new User("user", "test123");
         admin = new User("admin", "test123");
-        both = new User("user_admin", "test123");
+        banned = new User("banned", "test123");
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Roles.deleteAllRows").executeUpdate();
             em.createNamedQuery("User.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Meme.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Comment.deleteAllRows").executeUpdate();
             Role userRole = new Role("user");
             Role adminRole = new Role("admin");
+            Role bannedRole = new Role("banned");
             user.addRole(userRole);
             admin.addRole(adminRole);
-            both.addRole(userRole);
-            both.addRole(adminRole);
+            banned.addRole(bannedRole);
             em.persist(userRole);
             em.persist(adminRole);
             em.persist(user);
             em.persist(admin);
-            em.persist(both);
+            em.persist(banned);
             em.getTransaction().commit();
 
         } finally {
@@ -107,6 +109,11 @@ public class UserFacadeTest {
 
         assertTrue(userDTO.getUsername().equals(newUser.getUsername()));
 
+    }
+
+    @Test
+    public void testBanUser() {
+        facade.
     }
 
 }
