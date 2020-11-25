@@ -34,7 +34,7 @@ public class UserResource {
     }
     
     @GET
-//    @RolesAllowed("admin")
+    @RolesAllowed("admin")
     @Produces({MediaType.APPLICATION_JSON})
     public String getUsers() {
         List<UserDTO> dtoList = USER_FACADE.getAllUsers();
@@ -90,12 +90,13 @@ public class UserResource {
     }
     
     @POST
-    @Path("change-pw/{newPw}")
+    @Path("change-pw/{oldPw}/{newPw}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public String changePassword(@PathParam("newPw") String newPw, String user) {
+    public String changePassword(@PathParam("oldPw") String oldPw, @PathParam("newPw") String newPw, String user) throws AuthenticationException {
         UserDTO userDTO = GSON.fromJson(user, UserDTO.class);
+        userDTO.setPassword(oldPw);
         USER_FACADE.changePassword(userDTO, newPw);
-        return "Great success";
+        return "{\"message\":  \"Password has been changed.\"}";
     }
 
 }

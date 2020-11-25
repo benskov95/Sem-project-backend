@@ -11,16 +11,12 @@ public class UserDTO {
     private List<String> roles;
     private String password;
     private String profilePicture;
-    private List<Meme> upvotedMemes;
-    private List<Meme> downvotedMemes;
 
 
     public UserDTO(User user) {
         this.username = user.getUsername();
         this.roles = user.getRolesAsStrings();
         this.profilePicture = user.getProfilePicture();
-        this.upvotedMemes = user.getUpvotedMemes();
-        this.downvotedMemes = user.getDownvotedMemes();
     }
 
     public UserDTO(){}
@@ -57,21 +53,5 @@ public class UserDTO {
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
-
-    public List<Meme> getUpvotedMemes() {
-        return upvotedMemes;
-    }
-
-    public void setUpvotedMemes(List<Meme> upvotedMemes) {
-        this.upvotedMemes = upvotedMemes;
-    }
-
-    public List<Meme> getDownvotedMemes() {
-        return downvotedMemes;
-    }
-
-    public void setDownvotedMemes(List<Meme> downvotedMemes) {
-        this.downvotedMemes = downvotedMemes;
-    }
-  
+    
 }

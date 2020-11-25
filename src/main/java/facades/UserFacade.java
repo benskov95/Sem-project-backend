@@ -105,14 +105,8 @@ public class UserFacade {
     
     public UserDTO editUser(UserDTO userDTO, String currentName) throws MissingInput, AuthenticationException {
         EntityManager em = emf.createEntityManager();
-        User user = em.find(User.class, currentName);
-        
+        User user = em.find(User.class, currentName);     
         checkInput(userDTO);
-        if (!user.getUsername().equals(userDTO.getUsername())) {
-            checkIfExists(userDTO, em);
-        }
-        
-        user.setUsername(userDTO.getUsername());
         user.setProfilePicture(userDTO.getProfilePicture());
         
         try {
@@ -125,7 +119,7 @@ public class UserFacade {
         }
     }
     
-    public void changePassword(UserDTO currentDTO, String newPassword) {
+    public void changePassword(UserDTO currentDTO, String newPassword) throws AuthenticationException {
         EntityManager em = emf.createEntityManager();
         User currentUser = em.find(User.class, currentDTO.getUsername());
         
@@ -139,6 +133,8 @@ public class UserFacade {
             } finally {
                 em.close();
             }
+        } else {
+            throw new AuthenticationException("The entered current password is invalid.");
         }
     }
 
@@ -154,9 +150,7 @@ public class UserFacade {
     } 
     
     private void checkInput(UserDTO userDTO) throws MissingInput {
-        if (userDTO.getUsername().isEmpty() ||
-            userDTO.getProfilePicture().isEmpty())
-        {
+        if (userDTO.getProfilePicture().isEmpty()) {
             throw new MissingInput("All fields must be filled out.");
         } 
         
