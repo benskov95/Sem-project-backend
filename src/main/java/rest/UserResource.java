@@ -33,12 +33,11 @@ public class UserResource {
     }
     
     @GET
-    @RolesAllowed("admin")
+//    @RolesAllowed("admin")
     @Produces({MediaType.APPLICATION_JSON})
     public String getUsers() {
         List<UserDTO> dtoList = USER_FACADE.getAllUsers();
         return GSON.toJson(dtoList);
-
     }
 
     @DELETE
@@ -68,6 +67,15 @@ public class UserResource {
         UserDTO userDTO = GSON.fromJson(user, UserDTO.class);
         UserDTO editedUser = USER_FACADE.editUser(userDTO, currentName);
         return GSON.toJson(editedUser);
+    }
+    
+    @POST
+    @Path("change-pw/{newPw}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String changePassword(@PathParam("newPw") String newPw, String user) {
+        UserDTO userDTO = GSON.fromJson(user, UserDTO.class);
+        USER_FACADE.changePassword(userDTO, newPw);
+        return "Great success";
     }
 
 }
