@@ -8,6 +8,7 @@ import entities.Meme;
 import utils.HttpUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class YesOrNoFetcher {
@@ -18,25 +19,36 @@ public class YesOrNoFetcher {
 
     public static String fetchYesOrNo(ExecutorService threadpool, Gson gson) throws InterruptedException, ExecutionException, TimeoutException {
 
-        ArrayList<MemeDTO> tasks = new ArrayList<>();
-
-
-        Callable<YesOrNoDTO> catTask = new Callable<YesOrNoDTO>() {
-            @Override
-            public YesOrNoDTO call() throws Exception {
-                String yesOrNo = HttpUtils.fetchData(yesOrNoURL);
-                YesOrNoDTO yesOrNoDTO = gson.fromJson(yesOrNo, YesOrNoDTO.class);
-                return yesOrNoDTO;
-            }
-        };
-
-        for (int i = 0; i < numberOfTasks; i++) {
-            Future<YesOrNoDTO> futureYesOrNo = threadpool.submit(catTask);
-            YesOrNoDTO yesOrNo = futureYesOrNo.get(5, TimeUnit.SECONDS);
-            MemeDTO memeDTO = new MemeDTO(yesOrNo);
-            tasks.add(memeDTO);
+        ArrayList<String> urls = new ArrayList<>();
+        for (int i = 0; i < numberOfTasks ; i++) {
+            urls.add(yesOrNoURL);
         }
 
-        return gson.toJson(tasks);
+        ArrayList<Future<YesOrNoDTO>> futures = new ArrayList<>();
+
+        for (String url : urls) {
+        Callable<YesOrNoDTO> yesOrNoTask = new Callable<YesOrNoDTO>() {
+            @Override
+            public YesOrNoDTO call() throws Exception {
+                String yesOrNo = HttpUtils.fetchData(url);
+                YesOrNoDTO yesOrNoDTO = gson.fromJson(yesOrNo, YesOrNoDTO.class);
+                return yesOrNoDTO;
+            }};
+            futures.add(threadpool.submit(yesOrNoTask));
+        };
+
+        List<YesOrNoDTO> result = new ArrayList<>();
+        for (Future<YesOrNoDTO> dtos: futures) {
+            result.add(dtos.get(2, TimeUnit.SECONDS));
+
+        }
+
+        List<MemeDTO> memeDTOS = new ArrayList<>();
+
+        for (YesOrNoDTO dtos: result) {
+            memeDTOS.add(new MemeDTO(dtos));
+        }
+
+        return gson.toJson(memeDTOS);
     }
 }
