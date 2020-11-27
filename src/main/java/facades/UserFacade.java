@@ -103,9 +103,9 @@ public class UserFacade {
         }
     }
     
-    public UserDTO editUser(UserDTO userDTO, String currentName) throws MissingInput, AuthenticationException {
+    public UserDTO editUser(UserDTO userDTO) throws MissingInput, AuthenticationException {
         EntityManager em = emf.createEntityManager();
-        User user = em.find(User.class, currentName);     
+        User user = em.find(User.class, userDTO.getUsername());     
         checkInput(userDTO);
         user.setProfilePicture(userDTO.getProfilePicture());
         

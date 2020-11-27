@@ -80,18 +80,19 @@ public class UserResource {
     }
     
     @PUT
-    @Path("{username}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public String editUser(@PathParam("username") String currentName, String user) throws MissingInput, AuthenticationException {
+    @RolesAllowed({"user", "admin"})
+    public String editUser(String user) throws MissingInput, AuthenticationException {
         UserDTO userDTO = GSON.fromJson(user, UserDTO.class);
-        UserDTO editedUser = USER_FACADE.editUser(userDTO, currentName);
+        UserDTO editedUser = USER_FACADE.editUser(userDTO);
         return GSON.toJson(editedUser);
     }
     
     @POST
     @Path("change-pw/{oldPw}/{newPw}")
     @Consumes({MediaType.APPLICATION_JSON})
+    @RolesAllowed({"user", "admin"})
     public String changePassword(@PathParam("oldPw") String oldPw, @PathParam("newPw") String newPw, String user) throws AuthenticationException {
         UserDTO userDTO = GSON.fromJson(user, UserDTO.class);
         userDTO.setPassword(oldPw);
