@@ -3,6 +3,7 @@ package facades;
 import dto.UserDTO;
 import entities.Role;
 import entities.User;
+import errorhandling.MissingInput;
 import security.errorhandling.AuthenticationException;
 import utils.EMF_Creator;
 
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -20,6 +22,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Disabled;
 
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
@@ -108,8 +112,28 @@ public class UserFacadeTest {
         assertTrue(userDTOList.size() == 4);
 
         assertTrue(userDTO.getUsername().equals(newUser.getUsername()));
-
     }
-
+    
+    @Test
+    public void testEditUser() throws MissingInput, AuthenticationException {
+        assertTrue(user.getUsername().equals("user"));
+        user.setProfilePicture("test");
+        facade.editUser(new UserDTO(user), "user");
+        assertTrue(user.getProfilePicture().equals("test"));
+    }
+    
+    @Test
+    public void testBanUser() {
+        assertTrue(user.getUsername().equals("user"));
+        UserDTO userDTO = facade.banUser("user");
+        assertTrue(userDTO.getRoles().get(0).equals("banned"));
+        
+    }
+    
+    @Test
+    public void testUnbanUser() {
+        assertTrue(banned.getUsername().equals("banned"));
+        UserDTO userDTO = facade.unbanUser("banned");
+        assertTrue(userDTO.getRoles().get(0).equals("user"));
+    }
 }
-
