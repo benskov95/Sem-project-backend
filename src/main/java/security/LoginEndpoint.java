@@ -48,6 +48,7 @@ public class LoginEndpoint {
       JsonObject responseJson = new JsonObject();
       responseJson.addProperty("username", username);
       responseJson.addProperty("token", token);
+      responseJson.addProperty("profilePicture", user.getProfilePicture());
       return Response.ok(new Gson().toJson(responseJson)).build();
 
     } catch (JOSEException | AuthenticationException ex) {
