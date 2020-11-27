@@ -89,7 +89,7 @@ public class UserResource {
         return GSON.toJson(editedUser);
     }
     
-    @POST
+    @PUT
     @Path("change-pw/{oldPw}/{newPw}")
     @Consumes({MediaType.APPLICATION_JSON})
     @RolesAllowed({"user", "admin"})
