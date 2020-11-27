@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import dto.CatDTO;
 import dto.FunnyDTO;
 import dto.MemeDTO;
+import entities.Meme;
 import utils.HttpUtils;
 
 import java.lang.reflect.Type;
@@ -21,27 +22,38 @@ public class CatFetcher {
     public static String fetchCat(ExecutorService threadpool, Gson gson) throws InterruptedException, ExecutionException, TimeoutException {
 
 
-        ArrayList<MemeDTO> tasks = new ArrayList<>();
+        ArrayList<String> urls = new ArrayList<>();
+        ArrayList<Future<CatDTO>> futures = new ArrayList<>();
+
+        for (int i = 0; i < numberOfTasks; i++) {
+            urls.add(catURL);
+        }
+        for (String url: urls) {
 
         Callable<CatDTO> catTask = new Callable<CatDTO>() {
             @Override
             public CatDTO call() throws Exception {
-                String cat = HttpUtils.fetchData(catURL);
+                String cat = HttpUtils.fetchData(url);
                 Type listType = new TypeToken<List<CatDTO>>() {}.getType();
 
                 List<CatDTO> catDTO = gson.fromJson(cat,listType);
 
                 return catDTO.get(0);
-            }
-        };
-
-        for (int i = 0; i < numberOfTasks; i++) {
-            Future<CatDTO> futureCat = threadpool.submit(catTask);
-            CatDTO cat = futureCat.get(5, TimeUnit.SECONDS);
-            MemeDTO memeDTO = new MemeDTO(cat);
-            tasks.add(memeDTO);
+            }};
+          futures.add(threadpool.submit(catTask));
         }
 
-        return gson.toJson(tasks);
+        List<CatDTO> result = new ArrayList<>();
+        for (Future<CatDTO> fut : futures){
+            result.add(fut.get(2, TimeUnit.SECONDS));
+        }
+
+        List<MemeDTO> memeDTOlist = new ArrayList<>();
+        for (CatDTO dtos: result) {
+            memeDTOlist.add(new MemeDTO(dtos));
+
+        }
+
+        return gson.toJson(memeDTOlist);
     }
 }

@@ -5,6 +5,7 @@ public class MemeDTO {
     private String title;
     private String imageUrl;
 
+
     public MemeDTO() {
     }
 
@@ -17,7 +18,6 @@ public class MemeDTO {
         this.title = cat.getId();
         this.imageUrl = cat.getUrl();
     }
-
     public MemeDTO(YesOrNoDTO yesOrNo){
         this.imageUrl = yesOrNo.getImage();
     }
