@@ -22,6 +22,10 @@ public class MemeDTO {
         this.imageUrl = yesOrNo.getImage();
     }
 
+    public MemeDTO(DogDTO dog) {
+        this.imageUrl = dog.getMessage();
+    }
+
     public String getTitle() {
         return title;
     }
