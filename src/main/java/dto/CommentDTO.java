@@ -13,12 +13,13 @@ public class CommentDTO {
     private Date dateOfPost;
     private int meme_id;
 
-    public CommentDTO(Comment comment, User user, Meme meme) {
-        this.username = user.getUsername();
+    public CommentDTO(Comment comment) {
+        this.username = comment.getAuthor().getUsername();
         this.comment = comment.getComment();
         this.dateOfPost = comment.getDateOfPost();
-        this.meme_id = meme.getId();
+        this.meme_id = comment.getMeme().getId();
     }
+
 
     public CommentDTO() {
     }

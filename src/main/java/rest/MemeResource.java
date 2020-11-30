@@ -14,6 +14,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -70,10 +71,10 @@ public class MemeResource {
     }
 
     @POST
-    @Path("/comment/{id}")
+    @Path("/comment")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String addComment(@PathParam("id") int id, String comment) {
+    public String addComment(String comment) {
 
         CommentDTO commentDTO = gson.fromJson(comment , CommentDTO.class);
         facade.addComment(commentDTO);
@@ -81,6 +82,14 @@ public class MemeResource {
         return gson.toJson(commentDTO);
 
 
+    }
+
+    @GET
+    @Path("/comment/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getComment(@PathParam("id") int id) {
+        List<CommentDTO> commentDTOList =facade.getAllCommentsById(id);
+        return gson.toJson(commentDTOList);
     }
 
 

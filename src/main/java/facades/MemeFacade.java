@@ -7,6 +7,9 @@ import entities.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemeFacade {
     
@@ -40,6 +43,22 @@ public class MemeFacade {
             em.close();
         }
 
+    }
+
+    public List<CommentDTO> getAllCommentsById (int id) {
+
+        EntityManager em = emf.createEntityManager();
+
+        TypedQuery<Comment> query = em.createQuery("SELECT c From Comment c join c.meme m where m.id = :id", Comment.class);
+        query.setParameter("id", id);
+
+        List<Comment> commentList = query.getResultList();
+        List<CommentDTO> commentDTOList = new ArrayList<>();
+
+        for (Comment comment:commentList) {
+            commentDTOList.add(new CommentDTO(comment));
+        }
+        return commentDTOList;
     }
 
     
