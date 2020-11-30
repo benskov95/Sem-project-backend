@@ -2,11 +2,15 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dto.CommentDTO;
+import facades.MemeFacade;
 import fetchers.CatFetcher;
 import fetchers.FunnyFetcher;
 import fetchers.YesOrNoFetcher;
 import fetchers.DogFetcher;
+import utils.EMF_Creator;
 
+import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
@@ -18,8 +22,10 @@ import java.util.concurrent.TimeoutException;
 @Path("memes")
 public class MemeResource {
 
+    private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static ExecutorService es = Executors.newCachedThreadPool();
+    private static MemeFacade facade = MemeFacade.getMemeFacade(EMF);
 
    
     @GET
@@ -67,9 +73,12 @@ public class MemeResource {
     @Path("/comment/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String addComment(@PathParam("id") String id, String comment) {
+    public String addComment(@PathParam("id") int id, String comment) {
 
-        return null;
+        CommentDTO commentDTO = gson.fromJson(comment , CommentDTO.class);
+        facade.addComment(commentDTO);
+
+        return gson.toJson(commentDTO);
 
 
     }

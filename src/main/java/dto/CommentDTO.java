@@ -11,13 +11,16 @@ public class CommentDTO {
     private String username;
     private String comment;
     private Date dateOfPost;
-    private String memeId;
+    private int meme_id;
 
     public CommentDTO(Comment comment, User user, Meme meme) {
         this.username = user.getUsername();
         this.comment = comment.getComment();
         this.dateOfPost = comment.getDateOfPost();
-        this.memeId = meme.getImage();
+        this.meme_id = meme.getId();
+    }
+
+    public CommentDTO() {
     }
 
     public String getUsername() {
@@ -44,11 +47,12 @@ public class CommentDTO {
         this.dateOfPost = dateOfPost;
     }
 
-    public String getMemeId() {
-        return memeId;
+
+    public int getMeme_id() {
+        return meme_id;
     }
 
-    public void setMemeId(String memeId) {
-        this.memeId = memeId;
+    public void setMeme_id(int meme_id) {
+        this.meme_id = meme_id;
     }
 }
