@@ -6,12 +6,17 @@ import entities.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 
 public class MemeFacade {
-    
+
     private static EntityManagerFactory emf;
     private static MemeFacade instance;
-    
+
     public static MemeFacade getMemeFacade(EntityManagerFactory _emf) {
         if (instance == null) {
             emf = _emf;
@@ -104,5 +109,52 @@ public class MemeFacade {
             return false;
         }
     }
+
+    public List<MemeDTO> getAllDownvotedMemes() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery query = em.createQuery("SELECT DISTINCT m FROM Meme m JOIN m.downvoters d", Meme.class);
+            List<Meme> memesList = query.getResultList();
+            List<MemeDTO> memeDTOsList = new ArrayList<>();
+            for (Meme meme : memesList) {
+                memeDTOsList.add(new MemeDTO(meme));
+            }
+            return memeDTOsList;
+        } finally {
+            em.close();
+        }
+    }
     
+    public List<MemeDTO> getAllUpvotedMemes() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery query = em.createQuery("SELECT DISTINCT m FROM Meme m JOIN m.upvoters u", Meme.class);
+            List<Meme> memesList = query.getResultList();
+            List<MemeDTO> memeDTOsList = new ArrayList<>();
+            for (Meme meme : memesList) {
+                memeDTOsList.add(new MemeDTO(meme));
+            }
+            return memeDTOsList;
+        } finally {
+            em.close();
+        }
+    }
+    
+       public List<MemeDTO> getFavoriteMemes(String userName) {
+        EntityManager em = emf.createEntityManager();
+        try{
+        TypedQuery<Meme> query = em.createQuery("SELECT m FROM Meme m join m.upvoters u WHERE u.username = :username", Meme.class);
+        query.setParameter("username", userName);
+        List<Meme> result = query.getResultList();
+        List<MemeDTO> memeDTOsList = new ArrayList<>();
+            for (Meme meme : result) {
+                memeDTOsList.add(new MemeDTO(meme));
+            }
+            return memeDTOsList;
+        } finally {
+            em.close();
+        }
+    }
+    
+
 }
