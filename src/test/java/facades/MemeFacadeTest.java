@@ -109,6 +109,13 @@ public class MemeFacadeTest {
         assertTrue(memeDTOsList.size() == 2);
     }
     
+    @Test
+    public void getFavoriteMemesTest() {
+        List<MemeDTO> memeDTOsList = facade.getFavoriteMemes("user");
+        assertTrue(memeDTOsList.size() == 1);
+        
+    }
+    
     public void setupTestData(EntityManager em) {
         user = new User("user", "test123");
         admin = new User("admin", "test123");
