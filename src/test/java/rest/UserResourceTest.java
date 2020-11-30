@@ -79,6 +79,8 @@ public class UserResourceTest {
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Roles.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Comment.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Meme.deleteAllRows").executeUpdate();
             em.createNamedQuery("User.deleteAllRows").executeUpdate();
             Role userRole = new Role("user");
             Role adminRole = new Role("admin");
