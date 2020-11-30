@@ -100,10 +100,10 @@ public class MemeResource {
 
 
     @POST
-    @RolesAllowed({"user", "admin"})
     @Path("/comment")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user", "admin"})
     public String addComment(String comment) {
 
         CommentDTO commentDTO = gson.fromJson(comment , CommentDTO.class);
@@ -115,9 +115,9 @@ public class MemeResource {
     }
 
     @GET
-    @RolesAllowed({"user", "admin"})
     @Path("/comment/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user", "admin"})
     public String getComment(@PathParam("id") int id) {
         List<CommentDTO> commentDTOList = MEME_FACADE.getAllCommentsById(id);
         return gson.toJson(commentDTOList);
@@ -143,6 +143,7 @@ public class MemeResource {
     @GET
     @Path("/favorite/{username}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user", "admin"})
     public String getFavorite (@PathParam("username") String userName) {
         List<MemeDTO> memeDTOsList = MEME_FACADE.getFavoriteMemes(userName);
         
