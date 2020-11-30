@@ -24,7 +24,7 @@ public class MemeFacade {
     public List<MemeDTO> getAllDownvotedMemes() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery query = em.createQuery("SELECT m FROM Meme m ORDER BY downvotes DESC", Meme.class);
+            TypedQuery query = em.createQuery("SELECT DISTINCT m FROM Meme m JOIN m.downvoters d", Meme.class);
             List<Meme> memesList = query.getResultList();
             List<MemeDTO> memeDTOsList = new ArrayList<>();
             for (Meme meme : memesList) {
@@ -39,7 +39,7 @@ public class MemeFacade {
     public List<MemeDTO> getAllUpvotedMemes() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery query = em.createQuery("SELECT m FROM Meme m ORDER BY upvotes DESC", Meme.class);
+            TypedQuery query = em.createQuery("SELECT DISTINCT m FROM Meme m JOIN m.upvoters u", Meme.class);
             List<Meme> memesList = query.getResultList();
             List<MemeDTO> memeDTOsList = new ArrayList<>();
             for (Meme meme : memesList) {
