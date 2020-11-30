@@ -94,7 +94,7 @@ public class MemeFacade {
                 em.close();
             }
         }
-        return new MemeDTO();
+        return new MemeDTO(meme);
     }
     
     public MemeDTO downvoteMeme(String username, MemeDTO memeDTO) {
@@ -117,7 +117,7 @@ public class MemeFacade {
                 em.close();
             }
         }
-        return new MemeDTO();
+        return new MemeDTO(meme);
     }
     
     public Meme checkIfMemeExists(MemeDTO memeDTO, EntityManager em) {
