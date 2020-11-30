@@ -1,5 +1,6 @@
 package rest;
 
+import dto.MemeDTO;
 import entities.Comment;
 import entities.Meme;
 import entities.Role;
@@ -20,6 +21,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import static org.hamcrest.Matchers.equalTo;
 
 import static org.hamcrest.Matchers.is;
 
@@ -74,6 +76,18 @@ public class MemeResourceTest {
         EntityManager em = emf.createEntityManager();
         setupTestData(em);
     }
+    
+    private static String securityToken;
+
+    private static void login(String role, String password) {
+        String json = String.format("{username: \"%s\", password: \"%s\"}", role, password);
+        securityToken = given()
+                .contentType("application/json")
+                .body(json)
+                .when().post("/login")
+                .then()
+                .extract().path("token");
+    }
 
     @Test
     public void testServerIsUp() {
@@ -124,6 +138,58 @@ public class MemeResourceTest {
                 .body("size()", is(5));
     }
 
+    @Test
+    public void testUpvoteMeme() {
+        login("user", "test123");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .body(new MemeDTO(meme2))
+                .post("/memes/upvote/{username}", user.getUsername())
+                .then().assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("currentUpvotes", equalTo(2));
+    }
+    
+    @Test
+    public void testDownvoteMeme() {
+        login("admin", "test123");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .body(new MemeDTO(meme2))
+                .post("/memes/downvote/{username}", admin.getUsername())
+                .then().assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("currentDownvotes", equalTo(1));
+    }
+    
+    @Test
+    public void testUndoUpvote() {
+        login("user", "test123");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .body(new MemeDTO(meme1))
+                .post("/memes/upvote/{username}", user.getUsername())
+                .then().assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("currentUpvotes", equalTo(0));
+    }
+    
+    @Test
+    public void testUndoDownvote() {
+        login("admin", "test123");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .body(new MemeDTO(meme1))
+                .post("/memes/downvote/{username}", admin.getUsername())
+                .then().assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("currentDownvotes", equalTo(0));
+    }
+    
     @Test
     public void testGetColdList() {
 
