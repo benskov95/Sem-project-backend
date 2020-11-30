@@ -9,9 +9,6 @@ import fetchers.CatFetcher;
 import fetchers.FunnyFetcher;
 import fetchers.YesOrNoFetcher;
 import fetchers.DogFetcher;
-import utils.EMF_Creator;
-
-import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
