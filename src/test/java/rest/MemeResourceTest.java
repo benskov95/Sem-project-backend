@@ -211,6 +211,19 @@ public class MemeResourceTest {
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("size()", is(2));
     }
+    
+    @Test
+    public void testGetFavoriteList() {
+        login("user", "test123");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .get("/memes/favorite/{username}", user.getUsername())
+                .then().assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("size()", is(1));
+        
+    }
 
     public void setupTestData(EntityManager em) {
         user = new User("user", "test123");
