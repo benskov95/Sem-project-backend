@@ -37,7 +37,7 @@ public class MemeFacade {
     }
 
 
-    public void addComment(CommentDTO commentDTO) {
+    public CommentDTO addComment(CommentDTO commentDTO) {
 
         EntityManager em = emf.createEntityManager();
 
@@ -54,7 +54,7 @@ public class MemeFacade {
         }finally {
             em.close();
         }
-
+        return new CommentDTO(comment);
     }
 
     public List<CommentDTO> getAllCommentsById (int id) {

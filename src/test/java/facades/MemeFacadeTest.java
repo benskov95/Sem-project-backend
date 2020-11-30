@@ -1,5 +1,6 @@
 package facades;
 
+import dto.CommentDTO;
 import entities.Comment;
 import entities.Meme;
 import entities.Role;
@@ -57,6 +58,20 @@ public class MemeFacadeTest {
     @AfterEach
     public void tearDown() {
 //        Remove any data after each test was run
+    }
+    @Test
+    public void testAddComment(){
+        Comment comment = new Comment("Dette er en test", user);
+        comment.setMeme(meme1);
+        CommentDTO commentDTO = facade.addComment(new CommentDTO(comment));
+        assertTrue(commentDTO.getComment().equals("Dette er en test"));
+
+    }
+
+    @Test
+    public void testGetComments(){
+        List<CommentDTO> commentDTOList = facade.getAllCommentsById(meme1.getId());
+        assertTrue(commentDTOList.size() == 2);
     }
     
     @Test
