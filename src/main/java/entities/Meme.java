@@ -27,7 +27,7 @@ public class Meme implements Serializable {
     private int id;
     
     @Column(name = "image_url")
-    private String image;
+    private String imageUrl;
     
     @Column(name = "title")
     private String title;
@@ -47,7 +47,7 @@ public class Meme implements Serializable {
     }
 
     public Meme(String image, String title) {
-        this.image = image;
+        this.imageUrl = image;
         this.title = title;
     }
 
@@ -59,12 +59,12 @@ public class Meme implements Serializable {
         this.id = id;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getTitle() {
