@@ -46,13 +46,32 @@ public class MemeFacadeTest {
 
     @AfterAll
     public static void tearDownClass() {
-//        Clean up database after test is done or use a persistence unit with drop-and-create to start up clean on every test
     }
 
-    // Setup the DataBase in a known state BEFORE EACH TEST
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
+        setupTestData(em);
+    }
+
+    @AfterEach
+    public void tearDown() {
+//        Remove any data after each test was run
+    }
+    
+    @Test
+    public void getAllDownvotedMemesTest() {
+        List<MemeDTO> memeDTOsList = facade.getAllDownvotedMemes();
+        assertTrue(memeDTOsList.size() == 1);
+    }
+    
+    @Test
+    public void getAllUpvotedMemesTest() {
+        List<MemeDTO> memeDTOsList = facade.getAllUpvotedMemes();
+        assertTrue(memeDTOsList.size() == 2);
+    }
+    
+    public void setupTestData(EntityManager em) {
         user = new User("user", "test123");
         admin = new User("admin", "test123");
         banned = new User("banned", "test123");
@@ -94,22 +113,5 @@ public class MemeFacadeTest {
         } finally {
             em.close();
         }
-    }
-
-    @AfterEach
-    public void tearDown() {
-//        Remove any data after each test was run
-    }
-    
-    @Test
-    public void getAllDownvotedMemesTest() {
-        List<MemeDTO> memeDTOsList = facade.getAllDownvotedMemes();
-        assertTrue(memeDTOsList.size() == 1);
-    }
-    
-    @Test
-    public void getAllUpvotedMemesTest() {
-        List<MemeDTO> memeDTOsList = facade.getAllUpvotedMemes();
-        assertTrue(memeDTOsList.size() == 2);
     }
 }
