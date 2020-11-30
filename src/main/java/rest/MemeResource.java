@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
 import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.PathParam;
 import utils.EMF_Creator;
 
 @Path("memes")
@@ -84,5 +85,14 @@ public class MemeResource {
     public String getHotList() {
         List<MemeDTO> memeDTOsList = MEME_FACADE.getAllUpvotedMemes();
         return gson.toJson(memeDTOsList);
+    }
+    
+    @GET
+    @Path("/favorite/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getFavorite (@PathParam("username") String userName) {
+        List<MemeDTO> memeDTOsList = MEME_FACADE.getFavoriteMemes(userName);
+        
+       return gson.toJson(memeDTOsList);
     }
 }
