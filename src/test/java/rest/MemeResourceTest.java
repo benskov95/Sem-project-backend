@@ -192,12 +192,24 @@ public class MemeResourceTest {
     
     @Test
     public void testGetColdList() {
-
+        given()
+                .contentType("application/json")
+                .get("memes/cold")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("size()", is(1));
     }
 
     @Test
     public void testGetHotList() {
-
+        given()
+                .contentType("application/json")
+                .get("memes/hot")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("size()", is(2));
     }
 
     public void setupTestData(EntityManager em) {
@@ -217,7 +229,6 @@ public class MemeResourceTest {
             em.createNamedQuery("User.deleteAllRows").executeUpdate();
             Role userRole = new Role("user");
             Role adminRole = new Role("admin");
-            Role bannedRole = new Role("banned");
             user.addRole(userRole);
             admin.addRole(adminRole);
             both.addRole(userRole);
