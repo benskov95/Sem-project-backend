@@ -1,12 +1,18 @@
 package dto;
 
+import entities.Meme;
+
 public class MemeDTO {
 
     private String title;
     private String imageUrl;
 
-
     public MemeDTO() {
+    }
+    
+    public MemeDTO(Meme meme) {
+        this.title = meme.getTitle();
+        this.imageUrl = meme.getImageUrl();
     }
 
     public MemeDTO(FunnyDTO funny) {

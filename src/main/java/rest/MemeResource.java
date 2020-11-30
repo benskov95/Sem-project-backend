@@ -2,6 +2,8 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dto.MemeDTO;
+import facades.MemeFacade;
 import fetchers.CatFetcher;
 import fetchers.FunnyFetcher;
 import fetchers.YesOrNoFetcher;
@@ -16,12 +18,19 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
+import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.PathParam;
+import utils.EMF_Creator;
 
 @Path("memes")
 public class MemeResource {
 
+    private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static ExecutorService es = Executors.newCachedThreadPool();
+    public static final MemeFacade MEME_FACADE = MemeFacade.getMemeFacade(EMF);
 
    
     @GET
@@ -55,7 +64,7 @@ public class MemeResource {
         return yesOrNo;
     }
     
-     @GET
+    @GET
     @Path("/dog")
     @Produces(MediaType.APPLICATION_JSON)
     public String getDog () throws InterruptedException, ExecutionException, TimeoutException {
@@ -64,7 +73,25 @@ public class MemeResource {
 
         return dogs;
     }
-
-
+    
+    @POST
+    @Path("upvote/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String upvoteMeme(@PathParam("username") String username, String meme) {
+        MemeDTO memeDTO = gson.fromJson(meme, MemeDTO.class);
+        int currentUpvotes = MEME_FACADE.upvoteMeme(username, memeDTO);
+        return "{\"currentUpvotes\":" + currentUpvotes + "}";
+    }
+    // add role
+    @POST
+    @Path("downvote/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String downvoteMeme(@PathParam("username") String username, String meme) {
+        MemeDTO memeDTO = gson.fromJson(meme, MemeDTO.class);
+        int currentDownvotes = MEME_FACADE.downvoteMeme(username, memeDTO);
+        return "{\"currentDownvotes\":" + currentDownvotes + "}";
+    }
    
 }
