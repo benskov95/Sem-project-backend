@@ -56,17 +56,40 @@ public class MemeFacadeTest {
 
     @AfterEach
     public void tearDown() {
-//        Remove any data after each test was run
     }
     
     @Test
-    public void getAllDownvotedMemesTest() {
+    public void testUpvoteMeme() {
+        int currentUpvotes = facade.upvoteMeme(user.getUsername(), new MemeDTO(meme2));
+        assertEquals(2, currentUpvotes);
+    }
+    
+    @Test
+    public void testDownvoteMeme() {
+        int currentDownvotes = facade.downvoteMeme(admin.getUsername(), new MemeDTO(meme2));
+        assertEquals(1, currentDownvotes);
+    }
+    
+    @Test
+    public void testUndoUpvote() {
+        int upvotes = facade.upvoteMeme(user.getUsername(), new MemeDTO(meme1));
+        assertTrue(upvotes == 0);
+    }
+    
+    @Test
+    public void testUndoDownvote() {
+        int downvotes = facade.downvoteMeme(admin.getUsername(), new MemeDTO(meme1));
+        assertTrue(downvotes == 0);
+    }
+    
+    @Test
+    public void testGetAllDownvotedMemes() {
         List<MemeDTO> memeDTOsList = facade.getAllDownvotedMemes();
         assertTrue(memeDTOsList.size() == 1);
     }
     
     @Test
-    public void getAllUpvotedMemesTest() {
+    public void testGetAllUpvotedMemes() {
         List<MemeDTO> memeDTOsList = facade.getAllUpvotedMemes();
         assertTrue(memeDTOsList.size() == 2);
     }
