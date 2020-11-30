@@ -1,5 +1,7 @@
 package rest;
 
+import entities.Comment;
+import entities.Meme;
 import entities.Role;
 import entities.User;
 import utils.EMF_Creator;
@@ -25,15 +27,16 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
-
 public class MemeResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
     private static User user, admin, both;
-
+    private static Meme meme1, meme2;
+    private static Comment comment1, comment2, comment3;
 
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -66,24 +69,105 @@ public class MemeResourceTest {
         httpServer.shutdownNow();
     }
 
-    // Setup the DataBase (used by the test-server and this test) in a known state BEFORE EACH TEST
-    //TODO -- Make sure to change the EntityClass used below to use YOUR OWN (renamed) Entity class
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
+        setupTestData(em);
+    }
+
+    @Test
+    public void testServerIsUp() {
+        given().when().get("memes/funny").then().statusCode(200);
+    }
+
+    @Test
+    public void testGetFunny() {
+        given()
+                .contentType("application/json")
+                .get("memes/funny")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("size()", is(5));
+    }
+
+    @Test
+    public void testGetCat() {
+        given()
+                .contentType("application/json")
+                .get("memes/cat")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("size()", is(5));
+    }
+
+    @Test
+    public void testGetYesOrNo() {
+        given()
+                .contentType("application/json")
+                .get("memes/yesorno")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("size()", is(5));
+    }
+
+    @Test
+    public void testGetDog() {
+        given()
+                .contentType("application/json")
+                .get("memes/dog")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("size()", is(5));
+    }
+
+    @Test
+    public void testGetColdList() {
+
+    }
+
+    @Test
+    public void testGetHotList() {
+
+    }
+
+    public void setupTestData(EntityManager em) {
         user = new User("user", "test123");
         admin = new User("admin", "test123");
         both = new User("user_admin", "test123");
+        meme1 = new Meme("fatcat.jpg", "Random cat");
+        meme2 = new Meme("yomama.jpg", "Offensive joke");
+        comment1 = new Comment("Jeg synes den er sjov", user);
+        comment2 = new Comment("Jeg synes den er fed", user);
+        comment3 = new Comment("Jeg synes den er nederen", admin);
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Roles.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Comment.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Meme.deleteAllRows").executeUpdate();
             em.createNamedQuery("User.deleteAllRows").executeUpdate();
             Role userRole = new Role("user");
             Role adminRole = new Role("admin");
+            Role bannedRole = new Role("banned");
             user.addRole(userRole);
             admin.addRole(adminRole);
             both.addRole(userRole);
             both.addRole(adminRole);
+            meme1.getComments().add(comment1);
+            meme1.getComments().add(comment2);
+            meme2.getComments().add(comment3);
+            meme1.getUpvoters().add(user);
+            meme1.getDownvoters().add(admin);
+            meme2.getUpvoters().add(admin);
+            comment1.setMeme(meme1);
+            comment2.setMeme(meme1);
+            comment3.setMeme(meme2);
+            user.getUpvotedMemes().add(meme1);
+            admin.getUpvotedMemes().add(meme2);
+            admin.getDownvotedMemes().add(meme1);
             em.persist(userRole);
             em.persist(adminRole);
             em.persist(user);
@@ -93,54 +177,5 @@ public class MemeResourceTest {
         } finally {
             em.close();
         }
-    }
-
-    @Test
-    public void testServerIsUp() {
-        given().when().get("memes/funny").then().statusCode(200);
-    }
-    
-    @Test
-    public void getFunny() {
-        given()
-                .contentType("application/json")
-                .get("memes/funny")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("size()", is(5));
-    }
-    
-    @Test
-    public void getCat() {
-        given()
-                .contentType("application/json")
-                .get("memes/cat")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("size()", is(5));
-    }
-    
-    @Test
-    public void getYesOrNo() {
-        given()
-                .contentType("application/json")
-                .get("memes/yesorno")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("size()", is(5));
-    }
-    
-    @Test
-    public void getDog() {
-        given()
-                .contentType("application/json")
-                .get("memes/dog")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("size()", is(5));
     }
 }
