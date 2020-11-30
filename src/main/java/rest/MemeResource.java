@@ -100,6 +100,7 @@ public class MemeResource {
 
 
     @POST
+    @RolesAllowed({"user", "admin"})
     @Path("/comment")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -114,6 +115,7 @@ public class MemeResource {
     }
 
     @GET
+    @RolesAllowed({"user", "admin"})
     @Path("/comment/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getComment(@PathParam("id") int id) {

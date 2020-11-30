@@ -1,5 +1,6 @@
 package rest;
 
+import dto.CommentDTO;
 import dto.MemeDTO;
 import entities.Comment;
 import entities.Meme;
@@ -13,6 +14,7 @@ import static io.restassured.RestAssured.given;
 import io.restassured.parsing.Parser;
 
 import java.net.URI;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
@@ -21,6 +23,8 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import static org.hamcrest.Matchers.is;
@@ -210,6 +214,42 @@ public class MemeResourceTest {
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("size()", is(2));
+    }
+
+    @Test
+    public void testAddComment(){
+        Comment comment = new Comment("Test", user);
+        comment.setMeme(meme1);
+
+        login("user", "test123");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .body(new CommentDTO(comment))
+                .post("/memes/comment")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .and()
+                .body("comment", equalTo("Test"));
+
+
+    }
+
+    @Test
+    public void testGetCommentsById (){
+        List<CommentDTO> commentDTOList;
+
+        login("user", "test123");
+        commentDTOList =  given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .get("/memes/comment/{id}", meme1.getId())
+                .then()
+                .extract().body().jsonPath().getList("", CommentDTO.class);
+
+                assertThat(commentDTOList.size(), equalTo(2));
+
     }
 
     public void setupTestData(EntityManager em) {
