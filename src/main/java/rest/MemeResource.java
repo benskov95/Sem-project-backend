@@ -2,16 +2,17 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dto.CommentDTO;
 import dto.MemeDTO;
 import facades.MemeFacade;
 import fetchers.CatFetcher;
 import fetchers.FunnyFetcher;
 import fetchers.YesOrNoFetcher;
 import fetchers.DogFetcher;
+import utils.EMF_Creator;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.List;
@@ -32,6 +33,7 @@ public class MemeResource {
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static ExecutorService es = Executors.newCachedThreadPool();
     public static final MemeFacade MEME_FACADE = MemeFacade.getMemeFacade(EMF);
+
 
     @GET
     @Path("/funny")
@@ -93,6 +95,30 @@ public class MemeResource {
         return "{\"currentDownvotes\":" + currentDownvotes + "}";
     }
 
+
+    @POST
+    @Path("/comment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String addComment(String comment) {
+
+        CommentDTO commentDTO = gson.fromJson(comment , CommentDTO.class);
+        MEME_FACADE.addComment(commentDTO);
+
+        return gson.toJson(commentDTO);
+
+
+    }
+
+    @GET
+    @Path("/comment/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getComment(@PathParam("id") int id) {
+        List<CommentDTO> commentDTOList = MEME_FACADE.getAllCommentsById(id);
+        return gson.toJson(commentDTOList);
+    }
+
+
     @GET
     @Path("/cold")
     @Produces(MediaType.APPLICATION_JSON)
@@ -117,4 +143,5 @@ public class MemeResource {
         
        return gson.toJson(memeDTOsList);
     }
+
 }
