@@ -7,9 +7,7 @@ import fetchers.FunnyFetcher;
 import fetchers.YesOrNoFetcher;
 import fetchers.DogFetcher;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -63,6 +61,17 @@ public class MemeResource {
         String dogs = DogFetcher.fetchDog(es,gson);
 
         return dogs;
+    }
+
+    @POST
+    @Path("/comment/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String addComment(@PathParam("id") String id, String comment) {
+
+        return null;
+
+
     }
 
 
