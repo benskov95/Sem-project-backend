@@ -1,8 +1,11 @@
 package security;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -10,6 +13,8 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import dto.MemeDTO;
+import entities.Meme;
 import facades.UserFacade;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import security.errorhandling.AuthenticationException;
 import errorhandling.GenericExceptionMapper;
+import java.util.ArrayList;
 import javax.persistence.EntityManagerFactory;
 import utils.EMF_Creator;
 
@@ -37,7 +43,7 @@ public class LoginEndpoint {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response login(String jsonString) throws AuthenticationException {
+  public String login(String jsonString) throws AuthenticationException {
     JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
     String username = json.get("username").getAsString();
     String password = json.get("password").getAsString();
@@ -45,10 +51,27 @@ public class LoginEndpoint {
     try {
       User user = USER_FACADE.getVerifiedUser(username, password);
       String token = createToken(user);
+      List<MemeDTO> upvotedMemes = new ArrayList<>();
+      List<MemeDTO> downvotedMemes = new ArrayList<>();
+      
+      for (Meme meme : user.getUpvotedMemes()) {
+          upvotedMemes.add(new MemeDTO(meme));
+      }
+      for (Meme meme : user.getDownvotedMemes()) {
+          downvotedMemes.add(new MemeDTO(meme));
+      }
+      
+      JsonElement upvotes = new Gson().toJsonTree(upvotedMemes, new TypeToken<List<MemeDTO>>() {}.getType());
+      JsonElement downvotes = new Gson().toJsonTree(downvotedMemes, new TypeToken<List<MemeDTO>>() {}.getType());
+      JsonArray upvoteArray = upvotes.getAsJsonArray();
+      JsonArray downvoteArray = downvotes.getAsJsonArray();
+      
       JsonObject responseJson = new JsonObject();
       responseJson.addProperty("username", username);
       responseJson.addProperty("token", token);
-      return Response.ok(new Gson().toJson(responseJson)).build();
+      responseJson.add("upvotedMemes", upvoteArray);
+      responseJson.add("downvotedMemes", downvoteArray);
+      return new Gson().toJson(responseJson);
 
     } catch (JOSEException | AuthenticationException ex) {
       if (ex instanceof AuthenticationException) {
@@ -60,7 +83,6 @@ public class LoginEndpoint {
   }
 
   private String createToken(User user) throws JOSEException {
-
     StringBuilder res = new StringBuilder();
     for (String string : user.getRolesAsStrings()) {
       res.append(string);
