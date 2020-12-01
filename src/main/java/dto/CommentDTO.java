@@ -12,16 +12,27 @@ public class CommentDTO {
     private String comment;
     private Date dateOfPost;
     private int meme_id;
+    private String profilePicture;
 
     public CommentDTO(Comment comment) {
         this.username = comment.getAuthor().getUsername();
         this.comment = comment.getComment();
         this.dateOfPost = comment.getDateOfPost();
         this.meme_id = comment.getMeme().getId();
+        this.profilePicture = comment.getAuthor().getProfilePicture();
+
     }
 
 
     public CommentDTO() {
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public String getUsername() {
