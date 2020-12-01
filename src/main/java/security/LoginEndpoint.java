@@ -44,11 +44,10 @@ public class LoginEndpoint {
 
     try {
       User user = USER_FACADE.getVerifiedUser(username, password);
-      String token = createToken(username, user.getRolesAsStrings());
+      String token = createToken(user);
       JsonObject responseJson = new JsonObject();
       responseJson.addProperty("username", username);
       responseJson.addProperty("token", token);
-      responseJson.addProperty("profilePicture", user.getProfilePicture());
       return Response.ok(new Gson().toJson(responseJson)).build();
 
     } catch (JOSEException | AuthenticationException ex) {
@@ -60,10 +59,10 @@ public class LoginEndpoint {
     throw new AuthenticationException("Invalid username or password! Please try again");
   }
 
-  private String createToken(String userName, List<String> roles) throws JOSEException {
+  private String createToken(User user) throws JOSEException {
 
     StringBuilder res = new StringBuilder();
-    for (String string : roles) {
+    for (String string : user.getRolesAsStrings()) {
       res.append(string);
       res.append(",");
     }
@@ -73,8 +72,9 @@ public class LoginEndpoint {
     JWSSigner signer = new MACSigner(SharedSecret.getSharedKey());
     Date date = new Date();
     JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-            .subject(userName)
-            .claim("username", userName)
+            .subject(user.getUsername())
+            .claim("username", user.getUsername())
+            .claim("profilePicture", user.getProfilePicture())
             .claim("roles", rolesAsString)
             .claim("issuer", issuer)
             .issueTime(date)

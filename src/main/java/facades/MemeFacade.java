@@ -128,6 +128,9 @@ public class MemeFacade {
             return (Meme) q.getResultList().get(0);
         } else {
             Meme meme = new Meme(memeDTO.getImageUrl(), memeDTO.getTitle());
+            if (meme.getTitle() == null) {
+                meme.setTitle("none");
+            }
             em.getTransaction().begin();
             em.persist(meme);
             em.getTransaction().commit();
