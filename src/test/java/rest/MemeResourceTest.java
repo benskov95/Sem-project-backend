@@ -152,7 +152,7 @@ public class MemeResourceTest {
                 .post("/memes/upvote/{username}", user.getUsername())
                 .then().assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("currentUpvotes", equalTo(2));
+                .body("upvotes", equalTo(2));
     }
     
     @Test
@@ -165,7 +165,7 @@ public class MemeResourceTest {
                 .post("/memes/downvote/{username}", admin.getUsername())
                 .then().assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("currentDownvotes", equalTo(1));
+                .body("downvotes", equalTo(1));
     }
     
     @Test
@@ -178,7 +178,7 @@ public class MemeResourceTest {
                 .post("/memes/upvote/{username}", user.getUsername())
                 .then().assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("currentUpvotes", equalTo(0));
+                .body("upvotes", equalTo(0));
     }
     
     @Test
@@ -191,7 +191,7 @@ public class MemeResourceTest {
                 .post("/memes/downvote/{username}", admin.getUsername())
                 .then().assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("currentDownvotes", equalTo(0));
+                .body("downvotes", equalTo(0));
     }
     
     @Test

@@ -74,7 +74,7 @@ public class MemeFacade {
     }
 
 
-    public int upvoteMeme(String username, MemeDTO memeDTO) {
+    public MemeDTO upvoteMeme(String username, MemeDTO memeDTO) {
         EntityManager em = emf.createEntityManager();
         User user = em.find(User.class, username);
         Meme meme = checkIfMemeExists(memeDTO, em);
@@ -89,15 +89,15 @@ public class MemeFacade {
                 meme.getUpvoters().add(user);
                 user.getUpvotedMemes().add(meme);
                 em.getTransaction().commit();
-                return meme.getUpvoters().size();
+                return new MemeDTO(meme);
             } finally {
                 em.close();
             }
         }
-        return 0;
+        return new MemeDTO(meme);
     }
     
-    public int downvoteMeme(String username, MemeDTO memeDTO) {
+    public MemeDTO downvoteMeme(String username, MemeDTO memeDTO) {
         EntityManager em = emf.createEntityManager();
         User user = em.find(User.class, username);
         Meme meme = checkIfMemeExists(memeDTO, em);
@@ -112,12 +112,12 @@ public class MemeFacade {
                 meme.getDownvoters().add(user);
                 user.getDownvotedMemes().add(meme);
                 em.getTransaction().commit();
-                return meme.getDownvoters().size();
+                return new MemeDTO(meme);
             } finally {
                 em.close();
             }
         }
-        return 0;
+        return new MemeDTO(meme);
     }
     
     public Meme checkIfMemeExists(MemeDTO memeDTO, EntityManager em) {

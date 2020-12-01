@@ -9,9 +9,6 @@ import fetchers.CatFetcher;
 import fetchers.FunnyFetcher;
 import fetchers.YesOrNoFetcher;
 import fetchers.DogFetcher;
-import utils.EMF_Creator;
-
-import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
@@ -83,8 +80,8 @@ public class MemeResource {
     @RolesAllowed({"user", "admin"})
     public String upvoteMeme(@PathParam("username") String username, String meme) {
         MemeDTO memeDTO = gson.fromJson(meme, MemeDTO.class);
-        int currentUpvotes = MEME_FACADE.upvoteMeme(username, memeDTO);
-        return "{\"currentUpvotes\":" + currentUpvotes + "}";
+        MemeDTO upvotedMeme = MEME_FACADE.upvoteMeme(username, memeDTO);
+        return gson.toJson(upvotedMeme);
     }
 
     @POST
@@ -94,8 +91,8 @@ public class MemeResource {
     @RolesAllowed({"user", "admin"})
     public String downvoteMeme(@PathParam("username") String username, String meme) {
         MemeDTO memeDTO = gson.fromJson(meme, MemeDTO.class);
-        int currentDownvotes = MEME_FACADE.downvoteMeme(username, memeDTO);
-        return "{\"currentDownvotes\":" + currentDownvotes + "}";
+        MemeDTO downvotedMeme = MEME_FACADE.downvoteMeme(username, memeDTO);
+        return gson.toJson(downvotedMeme);
     }
 
 

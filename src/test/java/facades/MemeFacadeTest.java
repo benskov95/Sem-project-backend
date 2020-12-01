@@ -75,26 +75,26 @@ public class MemeFacadeTest {
     
     @Test
     public void testUpvoteMeme() {
-        int currentUpvotes = facade.upvoteMeme(user.getUsername(), new MemeDTO(meme2));
-        assertEquals(2, currentUpvotes);
+        MemeDTO upvotedMeme = facade.upvoteMeme(user.getUsername(), new MemeDTO(meme2));
+        assertEquals(2, upvotedMeme.getUpvotes());
     }
     
     @Test
     public void testDownvoteMeme() {
-        int currentDownvotes = facade.downvoteMeme(admin.getUsername(), new MemeDTO(meme2));
-        assertEquals(1, currentDownvotes);
+        MemeDTO downvotedMeme = facade.downvoteMeme(admin.getUsername(), new MemeDTO(meme2));
+        assertEquals(1, downvotedMeme.getDownvotes());
     }
     
     @Test
     public void testUndoUpvote() {
-        int upvotes = facade.upvoteMeme(user.getUsername(), new MemeDTO(meme1));
-        assertTrue(upvotes == 0);
+        MemeDTO undoneUpvote = facade.upvoteMeme(user.getUsername(), new MemeDTO(meme1));
+        assertTrue(undoneUpvote.getUpvotes() == 0);
     }
     
     @Test
     public void testUndoDownvote() {
-        int downvotes = facade.downvoteMeme(admin.getUsername(), new MemeDTO(meme1));
-        assertTrue(downvotes == 0);
+        MemeDTO downvotedMeme = facade.downvoteMeme(admin.getUsername(), new MemeDTO(meme1));
+        assertTrue(downvotedMeme.getDownvotes() == 0);
     }
     
     @Test
