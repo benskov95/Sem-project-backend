@@ -10,6 +10,7 @@ public class MemeDTO {
     private String imageUrl;
     private int upvotes;
     private int downvotes;
+    private int meme_id;
 
     public MemeDTO() {
     }
@@ -19,6 +20,7 @@ public class MemeDTO {
         this.imageUrl = meme.getImageUrl();
         this.upvotes = meme.getUpvoters().size();
         this.downvotes = meme.getDownvoters().size();
+        this.meme_id = meme.getId();
     }
 
     public MemeDTO(FunnyDTO funny) {
@@ -69,4 +71,13 @@ public class MemeDTO {
     public void setDownvotes(int downvotes) {
         this.downvotes = downvotes;
     }
+
+    public int getMeme_id() {
+        return meme_id;
+    }
+
+    public void setMeme_id(int meme_id) {
+        this.meme_id = meme_id;
+    }
+
 }
