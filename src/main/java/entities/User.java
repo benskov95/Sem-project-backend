@@ -63,7 +63,7 @@ public class User implements Serializable {
     }
 
   public User(String username, String userPass) {
-    this.username = username;
+    this.username = username.toLowerCase();
     this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt(12));
     this.profilePicture = defaultProfilePic;
   }
