@@ -32,7 +32,6 @@ public class Comment implements Serializable {
     @Column(name = "date_of_post")
     private Date dateOfPost;
     
-    
     @OneToOne
     private User author;
 

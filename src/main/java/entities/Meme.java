@@ -40,7 +40,7 @@ public class Meme implements Serializable {
     @JoinTable(name = "downvotes")
     private List<User> downvoters = new ArrayList<>();
     
-    @OneToMany(mappedBy = "meme", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "meme", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     public Meme() {

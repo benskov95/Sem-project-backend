@@ -28,13 +28,22 @@ public class UserFacade {
         return instance;
     }
 
-    public UserDTO deleteUser(String userName) {
+    public UserDTO deleteUser(String username) {
 
         EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery("SELECT c FROM Comment c WHERE c.author.username = :name");
+        q.setParameter("name", username);
+        
+        if (q.getResultList().size() > 0) {
+            em.getTransaction().begin();
+            Query del = em.createQuery("DELETE FROM Comment c WHERE c.author.username = :name");
+            del.setParameter("name", username).executeUpdate();
+            em.getTransaction().commit();
+        }
 
         try{
             em.getTransaction().begin();
-            User user = em.find(User.class, userName);
+            User user = em.find(User.class, username);
             em.remove(user);
             em.getTransaction().commit();
 

@@ -40,7 +40,6 @@ public class User implements Serializable {
   @ManyToMany(mappedBy = "upvoters", cascade = CascadeType.PERSIST)
   private List<Meme> upvotedMemes = new ArrayList<>();
   
-  
   @ManyToMany(mappedBy = "downvoters", cascade = CascadeType.PERSIST)
   private List<Meme> downvotedMemes = new ArrayList<>();
 
@@ -121,5 +120,6 @@ public class User implements Serializable {
     public void setDownvotedMemes(List<Meme> downvotedMemes) {
         this.downvotedMemes = downvotedMemes;
     }
+    
     
 }
