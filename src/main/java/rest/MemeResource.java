@@ -100,7 +100,7 @@ public class MemeResource {
     @Path("/comment")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     public String addComment(String comment) {
 
         CommentDTO commentDTO = gson.fromJson(comment , CommentDTO.class);
