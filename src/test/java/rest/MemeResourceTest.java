@@ -264,6 +264,20 @@ public class MemeResourceTest {
                 assertThat(commentDTOList.size(), equalTo(2));
 
     }
+    
+        @Test
+    public void testGetMemeById() {
+        int meme_id = meme2.getId();
+        login("user", "test123");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .get("/memes/{id}", meme_id)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("imageUrl", equalTo(meme2.getImageUrl()));
+    }
 
     public void setupTestData(EntityManager em) {
         user = new User("user", "test123");
