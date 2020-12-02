@@ -110,10 +110,16 @@ public class MemeFacadeTest {
     }
     
     @Test
-    public void getFavoriteMemesTest() {
+    public void testGetFavoriteMemes() {
         List<MemeDTO> memeDTOsList = facade.getFavoriteMemes("user");
         assertTrue(memeDTOsList.size() == 1);
         
+    }
+    
+    @Test
+    public void testGetMemeById() {
+        MemeDTO memeDTO = facade.getMemeById(meme1.getId());
+        assertTrue(memeDTO.getImageUrl().equals(meme1.getImageUrl()));
     }
     
     public void setupTestData(EntityManager em) {
