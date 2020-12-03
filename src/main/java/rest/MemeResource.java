@@ -149,7 +149,6 @@ public class MemeResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"user", "admin"})
     public String getMemeById (@PathParam("id") int id) {
         MemeDTO memeDTO = MEME_FACADE.getMemeById(id);
         return gson.toJson(memeDTO);
