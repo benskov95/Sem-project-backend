@@ -68,6 +68,7 @@ public class LoginEndpoint {
       
       JsonObject responseJson = new JsonObject();
       responseJson.addProperty("username", username);
+      responseJson.addProperty("profilePicture", user.getProfilePicture());
       responseJson.addProperty("token", token);
       responseJson.add("upvotedMemes", upvoteArray);
       responseJson.add("downvotedMemes", downvoteArray);
@@ -96,7 +97,6 @@ public class LoginEndpoint {
     JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
             .subject(user.getUsername())
             .claim("username", user.getUsername())
-            .claim("profilePicture", user.getProfilePicture())
             .claim("roles", rolesAsString)
             .claim("issuer", issuer)
             .issueTime(date)
