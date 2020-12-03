@@ -68,8 +68,8 @@ public class LoginEndpoint {
       
       JsonObject responseJson = new JsonObject();
       responseJson.addProperty("username", username);
-      responseJson.addProperty("profilePicture", user.getProfilePicture());
       responseJson.addProperty("token", token);
+      responseJson.addProperty("profilePicture", user.getProfilePicture());
       responseJson.add("upvotedMemes", upvoteArray);
       responseJson.add("downvotedMemes", downvoteArray);
       return new Gson().toJson(responseJson);
