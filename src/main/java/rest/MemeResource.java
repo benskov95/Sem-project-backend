@@ -114,7 +114,6 @@ public class MemeResource {
     @GET
     @Path("/comment/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"user", "admin"})
     public String getComment(@PathParam("id") int id) {
         List<CommentDTO> commentDTOList = MEME_FACADE.getAllCommentsById(id);
         return gson.toJson(commentDTOList);
