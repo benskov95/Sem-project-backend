@@ -1,6 +1,7 @@
 package dto;
 
 import entities.Meme;
+import entities.Report;
 import entities.User;
 import java.util.List;
 
@@ -11,6 +12,8 @@ public class MemeDTO {
     private int upvotes;
     private int downvotes;
     private int meme_id;
+    private String status;
+    private List<Report> reports;
 
     public MemeDTO() {
     }
@@ -21,6 +24,16 @@ public class MemeDTO {
         this.upvotes = meme.getUpvoters().size();
         this.downvotes = meme.getDownvoters().size();
         this.meme_id = meme.getId();
+        this.status = meme.getMemeStatus().getStatusName();
+        this.reports = meme.getReportList();
+    }
+
+    public List<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(List<Report> reports) {
+        this.reports = reports;
     }
 
     public MemeDTO(FunnyDTO funny) {
@@ -32,6 +45,15 @@ public class MemeDTO {
         this.title = cat.getId();
         this.imageUrl = cat.getUrl();
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public MemeDTO(YesOrNoDTO yesOrNo){
         this.imageUrl = yesOrNo.getImage();
     }
