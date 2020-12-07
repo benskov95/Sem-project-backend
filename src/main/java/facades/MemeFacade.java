@@ -73,6 +73,7 @@ public class MemeFacade {
         EntityManager em = emf.createEntityManager();
         User user = em.find(User.class, username);
         Meme meme = checkIfMemeExists(memeDTO, em);
+        addDefaultStatus(meme, em);
 
         if (!checkHasUpvoted(meme, user, em)) {
             try {
@@ -96,6 +97,7 @@ public class MemeFacade {
         EntityManager em = emf.createEntityManager();
         User user = em.find(User.class, username);
         Meme meme = checkIfMemeExists(memeDTO, em);
+        addDefaultStatus(meme, em);
 
         if (!checkHasDownvoted(meme, user, em)) {
             try {
@@ -118,6 +120,7 @@ public class MemeFacade {
     public MemeDTO addUserMeme(MemeDTO memeDTO) {
         EntityManager em = emf.createEntityManager();
         Meme meme = new Meme(memeDTO.getImageUrl(), "UserSubmission");
+        addDefaultStatus(meme, em);
 
         try {
             em.getTransaction().begin();
@@ -269,5 +272,11 @@ public class MemeFacade {
         } finally {
             em.close();
         }
+    }
+    
+    public void addDefaultStatus(Meme meme, EntityManager em) {
+        Query q = em.createQuery("SELECT m FROM MemeStatus m WHERE m.statusName = :default");
+        q.setParameter("default", "OK");
+        meme.setMemeStatus((MemeStatus) q.getSingleResult());
     }
 }

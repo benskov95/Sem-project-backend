@@ -68,7 +68,6 @@ public class Meme implements Serializable {
         this.imageUrl = image;
         this.title = title;
         this.postedBy = "none";
-        this.memeStatus = new MemeStatus("OK");
     }
 
     public MemeStatus getMemeStatus() {
