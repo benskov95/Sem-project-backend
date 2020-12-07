@@ -14,6 +14,7 @@ import javax.persistence.*;
  * @author Tha-Y
  */
 @Entity
+@NamedQuery (name = "MemeStatus.deleteAllRows", query = "DELETE FROM MemeStatus ")
 @Table(name = "meme_status")
 public class MemeStatus implements Serializable {
 
