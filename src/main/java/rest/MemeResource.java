@@ -164,5 +164,13 @@ public class MemeResource {
         MemeDTO memeDTO = MEME_FACADE.reportMeme(newReportDTO);
         return gson.toJson(memeDTO);
     }
-
+    
+    @GET
+    @Path("/reports")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin"})
+    public String getReportedMemes() {
+        List<MemeDTO> reportedMemesList = MEME_FACADE.getReportedMemes();
+        return gson.toJson(reportedMemesList);
+    }
 }
