@@ -26,9 +26,6 @@ public class MemeStatus implements Serializable {
 
     @Column(name = "status_name")
     private String statusName;
-
-    @Column(name = "description")
-    private String description;
     
     @OneToMany(mappedBy = "memeStatus")
     private List<Meme> memeList;
@@ -48,14 +45,6 @@ public class MemeStatus implements Serializable {
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public List<Meme> getMemeList() {

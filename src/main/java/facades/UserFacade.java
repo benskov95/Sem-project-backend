@@ -1,6 +1,7 @@
 package facades;
 
 import dto.UserDTO;
+import entities.MemeStatus;
 import entities.Role;
 import entities.User;
 import errorhandling.MissingInput;
@@ -183,6 +184,9 @@ public class UserFacade {
             em.persist(new Role("user"));
             em.persist(new Role("admin"));
             em.persist(new Role("banned"));
+            em.persist(new MemeStatus("OK"));
+            em.persist(new MemeStatus("Reported"));
+            em.persist(new MemeStatus("Blacklisted"));
             em.getTransaction().commit();
         }
     }
