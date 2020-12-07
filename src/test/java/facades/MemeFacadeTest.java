@@ -4,6 +4,7 @@ import dto.CommentDTO;
 import dto.ReportDTO;
 import entities.*;
 import dto.MemeDTO;
+import java.util.ArrayList;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
@@ -127,6 +128,16 @@ public class MemeFacadeTest {
         assertTrue(memeDTO.getStatus().equals("Reported"));
         assertTrue((memeDTO.getReports().get(0).getDescription().equals("Test")));
 
+    }
+    
+    @Test
+    public void testGetReportedMemes() {
+        List<MemeDTO> reportedMemesList = new ArrayList<>();
+        ReportDTO reportDTO = new ReportDTO("Voldeligt indhold", meme2.getId());
+        MemeDTO memeDTO = facade.reportMeme(reportDTO);
+        reportedMemesList.add(memeDTO);
+        reportedMemesList = facade.getReportedMemes();
+        assertTrue(reportedMemesList.size() == 1);
     }
     
     public void setupTestData(EntityManager em) {
