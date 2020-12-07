@@ -259,7 +259,7 @@ public class MemeFacade {
     public List<MemeDTO> getReportedMemes() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Meme> query = em.createQuery("SELECT m FROM Meme m WHERE m.memeStatus = 'Reported", Meme.class);
+            TypedQuery<Meme> query = em.createQuery("SELECT m FROM Meme m JOIN m.memeStatus s WHERE s.statusName = 'Reported'", Meme.class);
             List<Meme> reportedMemesList = query.getResultList();
             List<MemeDTO> memeDTOsList = new ArrayList<>();
             for (Meme meme : reportedMemesList) {
