@@ -1,10 +1,8 @@
 package facades;
 
 import dto.CommentDTO;
-import entities.Comment;
-import entities.Meme;
-import entities.Role;
-import entities.User;
+import dto.ReportDTO;
+import entities.*;
 import dto.MemeDTO;
 import utils.EMF_Creator;
 
@@ -34,6 +32,7 @@ public class MemeFacadeTest {
     private static User user, admin, banned;
     private static Meme meme1, meme2;
     private static Comment comment1, comment2, comment3;
+
 
     public MemeFacadeTest() {
     }
@@ -120,6 +119,14 @@ public class MemeFacadeTest {
         MemeDTO memeDTO = facade.getMemeById(meme1.getId());
         assertTrue(memeDTO.getImageUrl().equals(meme1.getImageUrl()));
     }
+    @Test
+    public void testReportMeme(){
+        ReportDTO reportDTO = new ReportDTO("Test", meme1.getId());
+        MemeDTO memeDTO = facade.reportMeme(reportDTO);
+        assertTrue(memeDTO.getStatus().equals("Reported"));
+        assertTrue((memeDTO.getReports().get(0).getDescription().equals("Test")));
+
+    }
     
     @Test
     public void testAddUserMeme() {
@@ -155,6 +162,9 @@ public class MemeFacadeTest {
             Role userRole = new Role("user");
             Role adminRole = new Role("admin");
             Role bannedRole = new Role("banned");
+            MemeStatus status1 = new MemeStatus("OK");
+            MemeStatus status2 = new MemeStatus("Reported");
+            MemeStatus status3 = new MemeStatus("Blacklisted");
             user.addRole(userRole);
             admin.addRole(adminRole);
             banned.addRole(bannedRole);
@@ -172,6 +182,9 @@ public class MemeFacadeTest {
             admin.getDownvotedMemes().add(meme1);
             em.persist(userRole);
             em.persist(adminRole);
+            em.persist(status1);
+            em.persist(status2);
+            em.persist(status3);
             em.persist(user);
             em.persist(admin);
             em.persist(banned);
@@ -180,4 +193,6 @@ public class MemeFacadeTest {
             em.close();
         }
     }
+
+
 }

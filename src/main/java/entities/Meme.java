@@ -44,10 +44,11 @@ public class Meme implements Serializable {
     @OneToMany(mappedBy = "meme", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    private MemeStatus memeStatus;
 
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    private MemeStatus memeStatus;
-//    
+    @OneToMany(mappedBy = "meme", cascade = CascadeType.ALL)
+    private List<Report> reportList = new ArrayList<>();
 
     @Column(name = "posted_by")
     private String postedBy;
@@ -55,20 +56,28 @@ public class Meme implements Serializable {
     public Meme() {
     }
 
+    public List<Report> getReportList() {
+        return reportList;
+    }
+
+    public void setReportList(List<Report> reportList) {
+        this.reportList = reportList;
+    }
+
     public Meme(String image, String title) {
         this.imageUrl = image;
         this.title = title;
-//        this.memeStatus = new MemeStatus("Ok", "None");
         this.postedBy = "none";
+        this.memeStatus = new MemeStatus("OK");
     }
 
-//    public MemeStatus getMemeStatus() {
-//        return memeStatus;
-//    }
-//
-//    public void setMemeStatus(MemeStatus memeStatus) {
-//        this.memeStatus = memeStatus;
-//    }
+    public MemeStatus getMemeStatus() {
+        return memeStatus;
+    }
+
+    public void setMemeStatus(MemeStatus memeStatus) {
+        this.memeStatus = memeStatus;
+    }
 
     public int getId() {
         return id;

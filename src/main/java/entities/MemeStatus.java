@@ -14,6 +14,7 @@ import javax.persistence.*;
  * @author Tha-Y
  */
 @Entity
+@NamedQuery (name = "MemeStatus.deleteAllRows", query = "DELETE FROM MemeStatus ")
 @Table(name = "meme_status")
 public class MemeStatus implements Serializable {
 
@@ -29,16 +30,16 @@ public class MemeStatus implements Serializable {
     @Column(name = "description")
     private String description;
     
-    
-//    @OneToMany(mappedBy = "memeStatus")
-//    private List<Meme> memeList;
+    @OneToMany(mappedBy = "memeStatus")
+    private List<Meme> memeList;
+
 
     public MemeStatus() {
     }
 
-    public MemeStatus(String statusName, String description) {
+
+    public MemeStatus(String statusName) {
         this.statusName = statusName;
-        this.description = description;
     }
 
     public String getStatusName() {
@@ -57,13 +58,13 @@ public class MemeStatus implements Serializable {
         this.description = description;
     }
 
-//    public List<Meme> getMemeList() {
-//        return memeList;
-//    }
-//
-//    public void setMemeList(List<Meme> memeList) {
-//        this.memeList = memeList;
-//    }
+    public List<Meme> getMemeList() {
+        return memeList;
+    }
+
+    public void setMemeList(List<Meme> memeList) {
+        this.memeList = memeList;
+    }
 
     public int getId() {
         return id;
@@ -71,31 +72,6 @@ public class MemeStatus implements Serializable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (int) id;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MemeStatus)) {
-            return false;
-        }
-        MemeStatus other = (MemeStatus) object;
-        if (this.id != other.id) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "entities.MemeStatus[ id=" + id + " ]";
     }
     
 }

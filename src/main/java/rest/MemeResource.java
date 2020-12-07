@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dto.CommentDTO;
 import dto.MemeDTO;
+import dto.ReportDTO;
 import facades.MemeFacade;
 import fetchers.CatFetcher;
 import fetchers.FunnyFetcher;
@@ -172,4 +173,24 @@ public class MemeResource {
         List<MemeDTO> memeDTOs = MEME_FACADE.getUserMemes();
         return gson.toJson(memeDTOs);
     }
+
+    @POST
+    @Path("/report")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user", "admin"})
+    public String reportMeme(String report){
+        ReportDTO newReportDTO = gson.fromJson(report, ReportDTO.class);
+        MemeDTO memeDTO = MEME_FACADE.reportMeme(newReportDTO);
+        return gson.toJson(memeDTO);
+    }
+    
+    @GET
+    @Path("/reports")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin"})
+    public String getReportedMemes() {
+        List<MemeDTO> reportedMemesList = MEME_FACADE.getReportedMemes();
+        return gson.toJson(reportedMemesList);
+    }
+    
 }
