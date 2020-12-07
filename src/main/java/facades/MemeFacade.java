@@ -14,7 +14,6 @@ import entities.Meme;
 import entities.User;
 import javax.persistence.Query;
 
-
 public class MemeFacade {
 
     private static EntityManagerFactory emf;
@@ -115,11 +114,11 @@ public class MemeFacade {
         }
         return new MemeDTO(meme);
     }
-    
+
     public MemeDTO addUserMeme(MemeDTO memeDTO) {
         EntityManager em = emf.createEntityManager();
         Meme meme = new Meme(memeDTO.getImageUrl(), "UserSubmission");
-        
+
         try {
             em.getTransaction().begin();
             em.persist(meme);
@@ -129,15 +128,15 @@ public class MemeFacade {
             em.close();
         }
     }
-    
+
     public List<MemeDTO> getUserMemes() {
         EntityManager em = emf.createEntityManager();
         List<MemeDTO> memeDTOs = new ArrayList<>();
-        
+
         Query q = em.createQuery("SELECT m FROM Meme m WHERE m.title = :default");
         q.setParameter("default", "UserSubmission");
         List<Meme> memes = q.getResultList();
-        
+
         for (Meme meme : memes) {
             memeDTOs.add(new MemeDTO(meme));
         }
@@ -232,7 +231,7 @@ public class MemeFacade {
         }
     }
 
-    public MemeDTO reportMeme(ReportDTO reportDTO){
+    public MemeDTO reportMeme(ReportDTO reportDTO) {
 
         EntityManager em = emf.createEntityManager();
 
@@ -245,16 +244,30 @@ public class MemeFacade {
         report.setMeme(meme);
         meme.getReportList().add(report);
 
-        try{
+        try {
             em.getTransaction().begin();
             em.persist(meme);
             em.getTransaction().commit();
 
-        }finally {
+        } finally {
             em.close();
         }
 
         return new MemeDTO(meme);
     }
 
+    public List<MemeDTO> getReportedMemes() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Meme> query = em.createQuery("SELECT m FROM Meme m JOIN m.memeStatus s WHERE s.statusName = 'Reported'", Meme.class);
+            List<Meme> reportedMemesList = query.getResultList();
+            List<MemeDTO> memeDTOsList = new ArrayList<>();
+            for (Meme meme : reportedMemesList) {
+                memeDTOsList.add(new MemeDTO(meme));
+            }
+            return memeDTOsList;
+        } finally {
+            em.close();
+        }
+    }
 }
