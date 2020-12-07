@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
+@NamedQuery (name = "Report.deleteAllRows", query = "DELETE FROM Report ")
 public class Report implements Serializable {
 
     private static final long serialVersionUID = 1L;
