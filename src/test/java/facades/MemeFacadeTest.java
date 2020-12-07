@@ -15,7 +15,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -128,6 +127,14 @@ public class MemeFacadeTest {
         MemeDTO memeDTO = new MemeDTO(meme);
         MemeDTO addedDTO = facade.addUserMeme(memeDTO);
         assertTrue(addedDTO.getTitle().equals("UserSubmission"));
+    }
+    
+    @Test
+    public void testGetUserMemes() {
+        Meme meme = new Meme("tester.png", "");
+        MemeDTO memeDTO = new MemeDTO(meme);
+        facade.addUserMeme(memeDTO);
+        assertTrue(facade.getUserMemes().size() == 1);
     }
     
     public void setupTestData(EntityManager em) {
