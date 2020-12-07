@@ -1,9 +1,8 @@
 package facades;
 
 import dto.CommentDTO;
-import entities.Comment;
-import entities.Meme;
-import entities.User;
+import entities.*;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
@@ -208,6 +207,16 @@ public class MemeFacade {
         } finally {
             em.close();
         }
+    }
+
+    public MemeDTO reportMeme(int meme_id, String description){
+
+        EntityManager em = emf.createEntityManager();
+
+        Meme meme = em.find(Meme.class, meme_id);
+
+
+        return null;
     }
 
 }
