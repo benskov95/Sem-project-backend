@@ -153,5 +153,23 @@ public class MemeResource {
         MemeDTO memeDTO = MEME_FACADE.getMemeById(id);
         return gson.toJson(memeDTO);
     }
-
+    
+    @POST
+    @Path("/post")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String addUserMeme(String meme) {
+        MemeDTO memeDTO = gson.fromJson(meme, MemeDTO.class);
+        MemeDTO addedDTO = MEME_FACADE.addUserMeme(memeDTO);
+        return gson.toJson(addedDTO);
+    }
+    
+    @GET
+    @Path("/submissions")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user", "admin"})
+    public String getUserMemes() {
+        List<MemeDTO> memeDTOs = MEME_FACADE.getUserMemes();
+        return gson.toJson(memeDTOs);
+    }
 }

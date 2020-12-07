@@ -265,7 +265,7 @@ public class MemeResourceTest {
 
     }
     
-        @Test
+    @Test
     public void testGetMemeById() {
         int meme_id = meme2.getId();
         login("user", "test123");
@@ -277,6 +277,35 @@ public class MemeResourceTest {
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("imageUrl", equalTo(meme2.getImageUrl()));
+    }
+    
+    @Test
+    public void testAddUserMeme() {
+        login("user", "test123");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .body(new MemeDTO(new Meme("tester.png", "")))
+                .post("/memes/post")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("title", equalTo("UserSubmission"));
+    }
+    
+    @Test
+    public void testGetUserMemes() {
+        List<MemeDTO> memeDTOs;
+        
+        login("user", "test123");
+        memeDTOs = given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .get("/memes/submissions")
+                .then()
+                .extract().body().jsonPath().getList("", MemeDTO.class);
+        
+        assertThat(memeDTOs.size(), equalTo(0));
     }
 
     public void setupTestData(EntityManager em) {
