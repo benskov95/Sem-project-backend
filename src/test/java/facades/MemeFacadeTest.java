@@ -32,6 +32,7 @@ public class MemeFacadeTest {
     private static User user, admin, banned;
     private static Meme meme1, meme2;
     private static Comment comment1, comment2, comment3;
+    private static MemeStatus status1, status2, status3;
 
 
     public MemeFacadeTest() {
@@ -131,6 +132,8 @@ public class MemeFacadeTest {
     @Test
     public void testAddUserMeme() {
         Meme meme = new Meme("tester.png", "");
+        meme.setPostedBy(user.getUsername());
+        meme.setMemeStatus(status1);
         MemeDTO memeDTO = new MemeDTO(meme);
         MemeDTO addedDTO = facade.addUserMeme(memeDTO);
         assertTrue(addedDTO.getTitle().equals("UserSubmission"));
@@ -139,6 +142,8 @@ public class MemeFacadeTest {
     @Test
     public void testGetUserMemes() {
         Meme meme = new Meme("tester.png", "");
+        meme.setPostedBy(admin.getUsername());
+        meme.setMemeStatus(status1);
         MemeDTO memeDTO = new MemeDTO(meme);
         facade.addUserMeme(memeDTO);
         assertTrue(facade.getUserMemes().size() == 1);
@@ -163,13 +168,12 @@ public class MemeFacadeTest {
             em.createNamedQuery("MemeStatus.deleteAllRows").executeUpdate();
             
             
-            
             Role userRole = new Role("user");
             Role adminRole = new Role("admin");
             Role bannedRole = new Role("banned");
-            MemeStatus status1 = new MemeStatus("OK");
-            MemeStatus status2 = new MemeStatus("Reported");
-            MemeStatus status3 = new MemeStatus("Blacklisted");
+            status1 = new MemeStatus("OK");
+            status2 = new MemeStatus("Reported");
+            status3 = new MemeStatus("Blacklisted");
             user.addRole(userRole);
             admin.addRole(adminRole);
             banned.addRole(bannedRole);
@@ -182,6 +186,8 @@ public class MemeFacadeTest {
             comment1.setMeme(meme1);
             comment2.setMeme(meme1);
             comment3.setMeme(meme2);
+            meme1.setMemeStatus(status1);
+            meme2.setMemeStatus(status1);
             user.getUpvotedMemes().add(meme1);
             admin.getUpvotedMemes().add(meme2);
             admin.getDownvotedMemes().add(meme1);

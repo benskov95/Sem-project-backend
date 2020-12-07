@@ -120,6 +120,7 @@ public class MemeFacade {
     public MemeDTO addUserMeme(MemeDTO memeDTO) {
         EntityManager em = emf.createEntityManager();
         Meme meme = new Meme(memeDTO.getImageUrl(), "UserSubmission");
+        meme.setPostedBy(memeDTO.getPostedBy());
         addDefaultStatus(meme, em);
 
         try {

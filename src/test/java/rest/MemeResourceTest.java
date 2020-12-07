@@ -4,6 +4,7 @@ import dto.CommentDTO;
 import dto.MemeDTO;
 import entities.Comment;
 import entities.Meme;
+import entities.MemeStatus;
 import entities.Role;
 import entities.User;
 import utils.EMF_Creator;
@@ -40,9 +41,10 @@ public class MemeResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
-    private static User user, admin, both;
+    private static User user, admin;
     private static Meme meme1, meme2;
     private static Comment comment1, comment2, comment3;
+    private static MemeStatus status1, status2, status3;
 
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -281,11 +283,16 @@ public class MemeResourceTest {
     
     @Test
     public void testAddUserMeme() {
+        Meme meme = new Meme("tester.png", "");
+        meme.setMemeStatus(status1);
+        meme.setPostedBy(user.getUsername());
+        MemeDTO memeDTO = new MemeDTO(meme);
+        
         login("user", "test123");
         given()
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
-                .body(new MemeDTO(new Meme("tester.png", "")))
+                .body(memeDTO)
                 .post("/memes/post")
                 .then()
                 .assertThat()
@@ -308,10 +315,9 @@ public class MemeResourceTest {
         assertThat(memeDTOs.size(), equalTo(0));
     }
 
-    public void setupTestData(EntityManager em) {
+  public void setupTestData(EntityManager em) {
         user = new User("user", "test123");
         admin = new User("admin", "test123");
-        both = new User("user_admin", "test123");
         meme1 = new Meme("fatcat.jpg", "Random cat");
         meme2 = new Meme("yomama.jpg", "Offensive joke");
         comment1 = new Comment("Jeg synes den er sjov", user);
@@ -321,14 +327,19 @@ public class MemeResourceTest {
             em.getTransaction().begin();
             em.createNamedQuery("Roles.deleteAllRows").executeUpdate();
             em.createNamedQuery("Comment.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Report.deleteAllRows").executeUpdate();
             em.createNamedQuery("Meme.deleteAllRows").executeUpdate();
             em.createNamedQuery("User.deleteAllRows").executeUpdate();
+            em.createNamedQuery("MemeStatus.deleteAllRows").executeUpdate();
+            
+            
             Role userRole = new Role("user");
             Role adminRole = new Role("admin");
+            status1 = new MemeStatus("OK");
+            status2 = new MemeStatus("Reported");
+            status3 = new MemeStatus("Blacklisted");
             user.addRole(userRole);
             admin.addRole(adminRole);
-            both.addRole(userRole);
-            both.addRole(adminRole);
             meme1.getComments().add(comment1);
             meme1.getComments().add(comment2);
             meme2.getComments().add(comment3);
@@ -338,17 +349,22 @@ public class MemeResourceTest {
             comment1.setMeme(meme1);
             comment2.setMeme(meme1);
             comment3.setMeme(meme2);
+            meme1.setMemeStatus(status1);
+            meme2.setMemeStatus(status1);
             user.getUpvotedMemes().add(meme1);
             admin.getUpvotedMemes().add(meme2);
             admin.getDownvotedMemes().add(meme1);
             em.persist(userRole);
             em.persist(adminRole);
+            em.persist(status1);
+            em.persist(status2);
+            em.persist(status3);
             em.persist(user);
             em.persist(admin);
-            em.persist(both);
             em.getTransaction().commit();
         } finally {
             em.close();
         }
     }
+    
 }
