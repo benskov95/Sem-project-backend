@@ -122,6 +122,14 @@ public class MemeFacadeTest {
         assertTrue(memeDTO.getImageUrl().equals(meme1.getImageUrl()));
     }
     
+    @Test
+    public void testAddUserMeme() {
+        Meme meme = new Meme("tester.png", "");
+        MemeDTO memeDTO = new MemeDTO(meme);
+        MemeDTO addedDTO = facade.addUserMeme(memeDTO);
+        assertTrue(addedDTO.getTitle().equals("UserSubmission"));
+    }
+    
     public void setupTestData(EntityManager em) {
         user = new User("user", "test123");
         admin = new User("admin", "test123");
