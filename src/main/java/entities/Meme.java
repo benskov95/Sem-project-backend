@@ -47,15 +47,24 @@ public class Meme implements Serializable {
 
     @ManyToOne(cascade = CascadeType.ALL)
     private MemeStatus memeStatus;
-    
+
+    @OneToMany(mappedBy = "meme", cascade = CascadeType.ALL)
+    private List<Report> reportList = new ArrayList<>();
 
     public Meme() {
+    }
+
+    public List<Report> getReportList() {
+        return reportList;
+    }
+
+    public void setReportList(List<Report> reportList) {
+        this.reportList = reportList;
     }
 
     public Meme(String image, String title) {
         this.imageUrl = image;
         this.title = title;
-        this.memeStatus = new MemeStatus("Ok", "None");
     }
 
     public MemeStatus getMemeStatus() {

@@ -2,15 +2,18 @@ package facades;
 
 import dto.CommentDTO;
 import entities.Comment;
+import dto.ReportDTO;
+import entities.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
+import java.util.ArrayList;
+import java.util.List;
 import dto.MemeDTO;
 import entities.Meme;
 import entities.User;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.TypedQuery;
+
 
 public class MemeFacade {
 
@@ -227,6 +230,31 @@ public class MemeFacade {
         } finally {
             em.close();
         }
+    }
+
+    public MemeDTO reportMeme(ReportDTO reportDTO){
+
+        EntityManager em = emf.createEntityManager();
+
+        Report report = new Report(reportDTO.getDescription());
+        Meme meme = em.find(Meme.class, reportDTO.getMeme_id());
+        Query query = em.createQuery("SELECT s from MemeStatus s where s.statusName = 'Reported'");
+        MemeStatus memeStatus = (MemeStatus) query.getSingleResult();
+
+        meme.setMemeStatus(memeStatus);
+        report.setMeme(meme);
+        meme.getReportList().add(report);
+
+        try{
+            em.getTransaction().begin();
+            em.persist(meme);
+            em.getTransaction().commit();
+
+        }finally {
+            em.close();
+        }
+
+        return new MemeDTO(meme);
     }
 
 }
