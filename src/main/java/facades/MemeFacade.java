@@ -2,18 +2,9 @@ package facades;
 
 import dto.CommentDTO;
 import entities.Comment;
-import entities.Meme;
-import entities.User;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.TypedQuery;
-import java.util.ArrayList;
-import java.util.List;
 import dto.MemeDTO;
 import entities.Meme;
 import entities.User;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,6 +111,34 @@ public class MemeFacade {
             }
         }
         return new MemeDTO(meme);
+    }
+    
+    public MemeDTO addUserMeme(MemeDTO memeDTO) {
+        EntityManager em = emf.createEntityManager();
+        Meme meme = new Meme(memeDTO.getImageUrl(), "UserSubmission");
+        
+        try {
+            em.getTransaction().begin();
+            em.persist(meme);
+            em.getTransaction().commit();
+            return new MemeDTO(meme);
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List<MemeDTO> getUserMemes() {
+        EntityManager em = emf.createEntityManager();
+        List<MemeDTO> memeDTOs = new ArrayList<>();
+        
+        Query q = em.createQuery("SELECT m FROM Meme m WHERE m.title = :default");
+        q.setParameter("default", "UserSubmission");
+        List<Meme> memes = q.getResultList();
+        
+        for (Meme meme : memes) {
+            memeDTOs.add(new MemeDTO(meme));
+        }
+        return memeDTOs;
     }
 
     public Meme checkIfMemeExists(MemeDTO memeDTO, EntityManager em) {

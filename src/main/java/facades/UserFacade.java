@@ -162,7 +162,6 @@ public class UserFacade {
         if (userDTO.getProfilePicture().isEmpty()) {
             throw new MissingInput("All fields must be filled out.");
         } 
-        
     }
 
     public void checkRole(User user, EntityManager em){
