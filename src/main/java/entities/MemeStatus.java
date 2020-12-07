@@ -30,8 +30,8 @@ public class MemeStatus implements Serializable {
     private String description;
     
     
-    @OneToMany(mappedBy = "memeStatus")
-    private List<Meme> memeList;
+//    @OneToMany(mappedBy = "memeStatus")
+//    private List<Meme> memeList;
 
     public MemeStatus() {
     }
@@ -57,13 +57,13 @@ public class MemeStatus implements Serializable {
         this.description = description;
     }
 
-    public List<Meme> getMemeList() {
-        return memeList;
-    }
-
-    public void setMemeList(List<Meme> memeList) {
-        this.memeList = memeList;
-    }
+//    public List<Meme> getMemeList() {
+//        return memeList;
+//    }
+//
+//    public void setMemeList(List<Meme> memeList) {
+//        this.memeList = memeList;
+//    }
 
     public int getId() {
         return id;

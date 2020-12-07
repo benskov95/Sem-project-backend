@@ -11,6 +11,7 @@ public class MemeDTO {
     private int upvotes;
     private int downvotes;
     private int meme_id;
+    private String postedBy;
 
     public MemeDTO() {
     }
@@ -21,6 +22,7 @@ public class MemeDTO {
         this.upvotes = meme.getUpvoters().size();
         this.downvotes = meme.getDownvoters().size();
         this.meme_id = meme.getId();
+        this.postedBy = meme.getPostedBy();
     }
 
     public MemeDTO(FunnyDTO funny) {
@@ -80,4 +82,11 @@ public class MemeDTO {
         this.meme_id = meme_id;
     }
 
+    public String getPostedBy() {
+        return postedBy;
+    }
+
+    public void setPostedBy(String postedBy) {
+        this.postedBy = postedBy;
+    }
 }

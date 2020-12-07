@@ -158,6 +158,7 @@ public class MemeResource {
     @Path("/post")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user", "admin"})
     public String addUserMeme(String meme) {
         MemeDTO memeDTO = gson.fromJson(meme, MemeDTO.class);
         MemeDTO addedDTO = MEME_FACADE.addUserMeme(memeDTO);
@@ -167,7 +168,6 @@ public class MemeResource {
     @GET
     @Path("/submissions")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"user", "admin"})
     public String getUserMemes() {
         List<MemeDTO> memeDTOs = MEME_FACADE.getUserMemes();
         return gson.toJson(memeDTOs);

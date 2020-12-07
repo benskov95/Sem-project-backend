@@ -45,26 +45,30 @@ public class Meme implements Serializable {
     private List<Comment> comments = new ArrayList<>();
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private MemeStatus memeStatus;
-    
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    private MemeStatus memeStatus;
+//    
 
+    @Column(name = "posted_by")
+    private String postedBy;
+    
     public Meme() {
     }
 
     public Meme(String image, String title) {
         this.imageUrl = image;
         this.title = title;
-        this.memeStatus = new MemeStatus("Ok", "None");
+//        this.memeStatus = new MemeStatus("Ok", "None");
+        this.postedBy = "none";
     }
 
-    public MemeStatus getMemeStatus() {
-        return memeStatus;
-    }
-
-    public void setMemeStatus(MemeStatus memeStatus) {
-        this.memeStatus = memeStatus;
-    }
+//    public MemeStatus getMemeStatus() {
+//        return memeStatus;
+//    }
+//
+//    public void setMemeStatus(MemeStatus memeStatus) {
+//        this.memeStatus = memeStatus;
+//    }
 
     public int getId() {
         return id;
@@ -112,6 +116,14 @@ public class Meme implements Serializable {
 
     public void setDownvoters(List<User> downvoters) {
         this.downvoters = downvoters;
+    }
+
+    public String getPostedBy() {
+        return postedBy;
+    }
+
+    public void setPostedBy(String postedBy) {
+        this.postedBy = postedBy;
     }
     
 }
