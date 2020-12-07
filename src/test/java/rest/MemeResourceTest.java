@@ -42,7 +42,7 @@ public class MemeResourceTest {
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
     private static User user, admin;
-    private static Meme meme1, meme2;
+    private static Meme meme1, meme2, meme3;
     private static Comment comment1, comment2, comment3;
     private static MemeStatus status1, status2, status3;
 
@@ -314,6 +314,19 @@ public class MemeResourceTest {
         
         assertThat(memeDTOs.size(), equalTo(0));
     }
+    
+    @Test
+    public void testGetReportedMemes() {
+        login("admin", "test123");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .get("/memes/reports")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("size()", is(1));
+    }
 
   public void setupTestData(EntityManager em) {
         user = new User("user", "test123");
@@ -351,6 +364,7 @@ public class MemeResourceTest {
             comment3.setMeme(meme2);
             meme1.setMemeStatus(status1);
             meme2.setMemeStatus(status1);
+            meme1.setMemeStatus(status2);
             user.getUpvotedMemes().add(meme1);
             admin.getUpvotedMemes().add(meme2);
             admin.getDownvotedMemes().add(meme1);
