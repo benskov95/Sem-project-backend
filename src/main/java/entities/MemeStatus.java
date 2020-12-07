@@ -6,22 +6,64 @@
 package entities;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.List;
+import javax.persistence.*;
 
 /**
  *
  * @author Tha-Y
  */
 @Entity
+@Table(name = "meme_status")
 public class MemeStatus implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "meme_status_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "status_name")
+    private String statusName;
+
+    @Column(name = "description")
+    private String description;
+    
+    
+    @OneToMany(mappedBy = "memeStatus")
+    private List<Meme> memeList;
+
+    public MemeStatus() {
+    }
+
+    public MemeStatus(String statusName, String description) {
+        this.statusName = statusName;
+        this.description = description;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Meme> getMemeList() {
+        return memeList;
+    }
+
+    public void setMemeList(List<Meme> memeList) {
+        this.memeList = memeList;
+    }
 
     public int getId() {
         return id;

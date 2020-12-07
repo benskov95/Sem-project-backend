@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -43,12 +44,25 @@ public class Meme implements Serializable {
     @OneToMany(mappedBy = "meme", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    private MemeStatus memeStatus;
+    
+
     public Meme() {
     }
 
     public Meme(String image, String title) {
         this.imageUrl = image;
         this.title = title;
+    }
+
+    public MemeStatus getMemeStatus() {
+        return memeStatus;
+    }
+
+    public void setMemeStatus(MemeStatus memeStatus) {
+        this.memeStatus = memeStatus;
     }
 
     public int getId() {
