@@ -8,6 +8,11 @@ public class ReportDTO {
     public ReportDTO() {
     }
 
+    public ReportDTO(String description, int meme_id) {
+        this.description = description;
+        this.meme_id = meme_id;
+    }
+
     public String getDescription() {
         return description;
     }
