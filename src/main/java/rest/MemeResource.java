@@ -205,10 +205,18 @@ public class MemeResource {
         
     }
     
+    @GET
+    @Path("/blacklisted")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getBlacklistedMemes() {
+        List<MemeDTO> blacklistedMemesList = MEME_FACADE.getBlacklistedMemes();
+        return gson.toJson(blacklistedMemesList);
+    }
+    
     @PUT
     @Path("/dismiss/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    //@RolesAllowed({"admin"})
+    @RolesAllowed({"admin"})
     public String dismissMemeReports(@PathParam("id") int id) {
         MemeDTO memeDTO = MEME_FACADE.dismissMemeReports(id);
         return gson.toJson(memeDTO);

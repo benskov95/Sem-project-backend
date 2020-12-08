@@ -298,6 +298,21 @@ public class MemeFacade {
        return new MemeDTO(meme);
     }
     
+    public List<MemeDTO> getBlacklistedMemes() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Meme> query = em.createQuery("SELECT m FROM Meme m JOIN m.memeStatus s WHERE s.statusName = 'Blacklisted'", Meme.class);
+            List<Meme> reportedMemesList = query.getResultList();
+            List<MemeDTO> memeDTOsList = new ArrayList<>();
+            for (Meme meme : reportedMemesList) {
+                memeDTOsList.add(new MemeDTO(meme));
+            }
+            return memeDTOsList;
+        } finally {
+            em.close();
+        }
+    }
+    
     public MemeDTO dismissMemeReports (int id)  {
         EntityManager em = emf.createEntityManager();
         Meme meme = em.find(Meme.class, id);
