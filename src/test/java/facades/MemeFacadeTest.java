@@ -163,6 +163,12 @@ public class MemeFacadeTest {
         assertTrue(reportedMemesList.size() == 1);
     }
     
+    @Test 
+    public void testBlackListMeme() {
+        MemeDTO memeDTO = facade.blackListMeme(meme1.getId());
+        assertTrue(memeDTO.getStatus().equals("Blacklisted"));
+    }
+    
     public void setupTestData(EntityManager em) {
         user = new User("user", "test123");
         admin = new User("admin", "test123");
