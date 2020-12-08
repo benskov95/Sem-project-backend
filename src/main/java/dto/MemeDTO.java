@@ -14,7 +14,7 @@ public class MemeDTO {
     private int meme_id;
     private String postedBy;
     private String status;
-    private List<ReportDTO> reports;
+    private List<Report> reports;
 
     public MemeDTO() {
     }
@@ -30,8 +30,13 @@ public class MemeDTO {
         this.reports = meme.getReportList();
     }
 
+    public List<Report> getReports() {
+        return reports;
+    }
 
-
+    public void setReports(List<Report> reports) {
+        this.reports = reports;
+    }
 
     public MemeDTO(FunnyDTO funny) {
         this.title = funny.getTitle();
