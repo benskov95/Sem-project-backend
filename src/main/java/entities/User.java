@@ -43,6 +43,13 @@ public class User implements Serializable {
   @ManyToMany(mappedBy = "downvoters", cascade = CascadeType.PERSIST)
   private List<Meme> downvotedMemes = new ArrayList<>();
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  private List<Report> reportList = new ArrayList<>();
+
+
+
+
+
   public List<String> getRolesAsStrings() {
     if (roleList.isEmpty()) {
       return null;
@@ -67,6 +74,13 @@ public class User implements Serializable {
     this.profilePicture = defaultProfilePic;
   }
 
+  public List<Report> getReportList() {
+    return reportList;
+  }
+
+  public void setReportList(List<Report> reportList) {
+    this.reportList = reportList;
+  }
 
   public String getUsername() {
     return username;

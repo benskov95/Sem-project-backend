@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import dto.CommentDTO;
 import dto.MemeDTO;
 import dto.ReportDTO;
+import errorhandling.MissingInput;
+import errorhandling.NotFoundException;
 import facades.MemeFacade;
 import fetchers.CatFetcher;
 import fetchers.FunnyFetcher;
@@ -178,7 +180,7 @@ public class MemeResource {
     @Path("/report")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"user", "admin"})
-    public String reportMeme(String report){
+    public String reportMeme(String report) throws MissingInput {
         ReportDTO newReportDTO = gson.fromJson(report, ReportDTO.class);
         MemeDTO memeDTO = MEME_FACADE.reportMeme(newReportDTO);
         return gson.toJson(memeDTO);

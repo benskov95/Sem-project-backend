@@ -12,6 +12,9 @@ import java.util.List;
 import dto.MemeDTO;
 import entities.Meme;
 import entities.User;
+import errorhandling.MissingInput;
+import errorhandling.NotFoundException;
+
 import javax.persistence.Query;
 
 public class MemeFacade {
@@ -235,17 +238,20 @@ public class MemeFacade {
         }
     }
 
-    public MemeDTO reportMeme(ReportDTO reportDTO) {
+    public MemeDTO reportMeme(ReportDTO reportDTO) throws  MissingInput {
 
         EntityManager em = emf.createEntityManager();
+        hasUserReported(reportDTO,em);
 
         Report report = new Report(reportDTO.getDescription());
         Meme meme = em.find(Meme.class, reportDTO.getMeme_id());
+        User user = em.find(User.class, reportDTO.getUsername());
         Query query = em.createQuery("SELECT s from MemeStatus s where s.statusName = 'Reported'");
         MemeStatus memeStatus = (MemeStatus) query.getSingleResult();
 
         meme.setMemeStatus(memeStatus);
         report.setMeme(meme);
+        report.setUser(user);
         meme.getReportList().add(report);
 
         try {
@@ -256,7 +262,6 @@ public class MemeFacade {
         } finally {
             em.close();
         }
-
         return new MemeDTO(meme);
     }
 
@@ -279,5 +284,15 @@ public class MemeFacade {
         Query q = em.createQuery("SELECT m FROM MemeStatus m WHERE m.statusName = :default");
         q.setParameter("default", "OK");
         meme.setMemeStatus((MemeStatus) q.getSingleResult());
+    }
+
+    public void hasUserReported(ReportDTO reportDTO, EntityManager em) throws MissingInput {
+        Query query = em.createQuery("SELECT r from Report r where r.user.username = :username and r.meme.id = :meme_id");
+        query.setParameter("username", reportDTO.getUsername());
+        query.setParameter("meme_id", reportDTO.getMeme_id());
+
+        if (!query.getResultList().isEmpty()){
+            throw new MissingInput("You have already reported this meme");
+        }
     }
 }

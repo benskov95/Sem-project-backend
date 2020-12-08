@@ -17,8 +17,18 @@ public class Report implements Serializable {
     @ManyToOne
     private Meme meme;
 
+    @ManyToOne
+    private User user;
 
     public Report() {
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Report(String description) {

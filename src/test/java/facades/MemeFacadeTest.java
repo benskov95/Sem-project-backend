@@ -5,6 +5,9 @@ import dto.ReportDTO;
 import entities.*;
 import dto.MemeDTO;
 import java.util.ArrayList;
+
+import errorhandling.MissingInput;
+import errorhandling.NotFoundException;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
@@ -122,8 +125,8 @@ public class MemeFacadeTest {
         assertTrue(memeDTO.getImageUrl().equals(meme1.getImageUrl()));
     }
     @Test
-    public void testReportMeme(){
-        ReportDTO reportDTO = new ReportDTO("Test", meme1.getId());
+    public void testReportMeme() throws MissingInput {
+        ReportDTO reportDTO = new ReportDTO("Test", meme1.getId(), user.getUsername());
         MemeDTO memeDTO = facade.reportMeme(reportDTO);
         assertTrue(memeDTO.getStatus().equals("Reported"));
         assertTrue((memeDTO.getReports().get(0).getDescription().equals("Test")));
@@ -151,9 +154,9 @@ public class MemeFacadeTest {
     }
     
     @Test
-    public void testGetReportedMemes() {
+    public void testGetReportedMemes() throws MissingInput {
         List<MemeDTO> reportedMemesList = new ArrayList<>();
-        ReportDTO reportDTO = new ReportDTO("Voldeligt indhold", meme2.getId());
+        ReportDTO reportDTO = new ReportDTO("Voldeligt indhold", meme2.getId(), user.getUsername());
         MemeDTO memeDTO = facade.reportMeme(reportDTO);
         reportedMemesList.add(memeDTO);
         reportedMemesList = facade.getReportedMemes();

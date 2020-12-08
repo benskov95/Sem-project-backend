@@ -33,7 +33,7 @@ public class MemeDTO {
 
     public final void addReportDTOList(List<Report> reportList) {
         for (Report report : reportList) {
-            this.reports.add(new ReportDTO(report.getDescription(), report.getMeme().getId()));
+            this.reports.add(new ReportDTO(report.getDescription(), report.getMeme().getId(), report.getUser().getUsername()));
         }
     }
     
