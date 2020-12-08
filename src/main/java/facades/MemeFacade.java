@@ -305,9 +305,10 @@ public class MemeFacade {
         q.setParameter("statusName", "OK");
         MemeStatus memeStatus = (MemeStatus) q.getSingleResult();
         meme.setMemeStatus(memeStatus);
-        meme.getReportList().clear();
         try {
             em.getTransaction().begin();
+            Query query = em.createQuery("DELETE FROM Report r WHERE r.meme.id = :meme_id");
+            query.setParameter("meme_id", id).executeUpdate();
             em.persist(meme);
             em.getTransaction().commit();
         } finally {
