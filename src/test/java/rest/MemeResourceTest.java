@@ -327,6 +327,19 @@ public class MemeResourceTest {
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("size()", is(1));
     }
+    
+    @Test
+    public void testBlackListMeme() {
+        login("admin", "test123");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .put("/memes/blacklist/{id}", meme1.getId())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("status", equalTo("Blacklisted"));
+    }
 
   public void setupTestData(EntityManager em) {
         user = new User("user", "test123");
