@@ -298,6 +298,26 @@ public class MemeFacade {
        return new MemeDTO(meme);
     }
     
+    public MemeDTO dismissMemeReports (int id)  {
+        EntityManager em = emf.createEntityManager();
+        Meme meme = em.find(Meme.class, id);
+        Query q = em.createQuery("SELECT m FROM MemeStatus m WHERE m.statusName = :statusName");
+        q.setParameter("statusName", "OK");
+        MemeStatus memeStatus = (MemeStatus) q.getSingleResult();
+        meme.setMemeStatus(memeStatus);
+        meme.getReportList().clear();
+        try {
+            em.getTransaction().begin();
+            em.persist(meme);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+       return new MemeDTO(meme);
+    
+        
+    }
+    
     
     public void addDefaultStatus(Meme meme, EntityManager em) {
         Query q = em.createQuery("SELECT m FROM MemeStatus m WHERE m.statusName = :default");

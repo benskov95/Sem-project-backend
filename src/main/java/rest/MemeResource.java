@@ -205,4 +205,15 @@ public class MemeResource {
         
     }
     
+    @PUT
+    @Path("/dismiss/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    //@RolesAllowed({"admin"})
+    public String dismissMemeReports(@PathParam("id") int id) {
+        MemeDTO memeDTO = MEME_FACADE.dismissMemeReports(id);
+        return gson.toJson(memeDTO);
+        
+    }
+    
+    
 }
