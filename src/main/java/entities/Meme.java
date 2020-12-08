@@ -56,13 +56,6 @@ public class Meme implements Serializable {
     public Meme() {
     }
 
-    public List<Report> getReportList() {
-        return reportList;
-    }
-
-    public void setReportList(List<Report> reportList) {
-        this.reportList = reportList;
-    }
 
     public Meme(String image, String title) {
         this.imageUrl = image;
@@ -70,6 +63,14 @@ public class Meme implements Serializable {
         this.postedBy = "none";
     }
 
+    public List<Report> getReportList() {
+        return reportList;
+    }
+
+    public void setReportList(List<Report> reportList) {
+        this.reportList = reportList;
+    }
+    
     public MemeStatus getMemeStatus() {
         return memeStatus;
     }

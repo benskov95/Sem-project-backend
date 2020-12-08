@@ -3,6 +3,7 @@ package dto;
 import entities.Meme;
 import entities.Report;
 import entities.User;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MemeDTO {
@@ -14,7 +15,7 @@ public class MemeDTO {
     private int meme_id;
     private String postedBy;
     private String status;
-    private List<Report> reports;
+    private List<ReportDTO> reports = new ArrayList<>();
 
     public MemeDTO() {
     }
@@ -27,14 +28,20 @@ public class MemeDTO {
         this.meme_id = meme.getId();
         this.postedBy = meme.getPostedBy();
         this.status = meme.getMemeStatus().getStatusName();
-        this.reports = meme.getReportList();
+        addReportDTOList(meme.getReportList());
     }
 
-    public List<Report> getReports() {
+    public final void addReportDTOList(List<Report> reportList) {
+        for (Report report : reportList) {
+            this.reports.add(new ReportDTO(report.getDescription(), report.getMeme().getId()));
+        }
+    }
+    
+    public List<ReportDTO> getReports() {
         return reports;
     }
 
-    public void setReports(List<Report> reports) {
+    public void setReports(List<ReportDTO> reports) {
         this.reports = reports;
     }
 
