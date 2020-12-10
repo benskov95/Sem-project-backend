@@ -25,6 +25,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
+import security.errorhandling.AuthenticationException;
 import utils.EMF_Creator;
 
 @Path("memes")
@@ -162,7 +163,7 @@ public class MemeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"user", "admin"})
-    public String addUserMeme(String meme) {
+    public String addUserMeme(String meme) throws AuthenticationException {
         MemeDTO memeDTO = gson.fromJson(meme, MemeDTO.class);
         MemeDTO addedDTO = MEME_FACADE.addUserMeme(memeDTO);
         return gson.toJson(addedDTO);

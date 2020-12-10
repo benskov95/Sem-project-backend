@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Disabled;
+import security.errorhandling.AuthenticationException;
 
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
@@ -134,7 +135,7 @@ public class MemeFacadeTest {
     }
     
     @Test
-    public void testAddUserMeme() {
+    public void testAddUserMeme() throws AuthenticationException {
         Meme meme = new Meme("tester.png", "");
         meme.setPostedBy(user.getUsername());
         meme.setMemeStatus(status1);
@@ -144,7 +145,7 @@ public class MemeFacadeTest {
     }
     
     @Test
-    public void testGetUserMemes() {
+    public void testGetUserMemes() throws AuthenticationException {
         Meme meme = new Meme("tester.png", "");
         meme.setPostedBy(admin.getUsername());
         meme.setMemeStatus(status1);

@@ -16,6 +16,7 @@ import errorhandling.MissingInput;
 import errorhandling.NotFoundException;
 
 import javax.persistence.Query;
+import security.errorhandling.AuthenticationException;
 
 public class MemeFacade {
 
@@ -120,8 +121,13 @@ public class MemeFacade {
         return new MemeDTO(meme);
     }
 
-    public MemeDTO addUserMeme(MemeDTO memeDTO) {
+    public MemeDTO addUserMeme(MemeDTO memeDTO) throws AuthenticationException {
         EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery("SELECT m FROM Meme m WHERE m.imageUrl = :url");
+        q.setParameter("url", memeDTO.getImageUrl());
+        if (q.getResultList().size() > 0) {
+            throw new AuthenticationException("A meme with this URL already exists.");
+        }
         Meme meme = new Meme(memeDTO.getImageUrl(), "UserSubmission");
         meme.setPostedBy(memeDTO.getPostedBy());
         addDefaultStatus(meme, em);
