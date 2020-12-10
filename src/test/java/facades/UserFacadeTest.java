@@ -1,5 +1,7 @@
 package facades;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dto.UserDTO;
 import entities.Role;
 import entities.User;
@@ -22,6 +24,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Locale;
+
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Disabled;
 
@@ -32,7 +36,7 @@ public class UserFacadeTest {
     private static EntityManagerFactory emf;
     private static UserFacade facade;
     private static User user, admin, banned;
-
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public UserFacadeTest() {
     }
@@ -104,14 +108,16 @@ public class UserFacadeTest {
 
     @Test
     public void testAddUser() throws AuthenticationException {
-        User newUser = new User("Test", "Testtest");
-        UserDTO userDTO = facade.addUser(new UserDTO(newUser));
+
+        String user = "{\"username\":\"Test\",\"password\":\"TestTest\"}";
+        UserDTO userDTO = GSON.fromJson(user, UserDTO.class);
+        UserDTO newUser = facade.addUser(userDTO);
 
         List<UserDTO> userDTOList = facade.getAllUsers();
 
         assertTrue(userDTOList.size() == 4);
 
-        assertTrue(userDTO.getUsername().equals(newUser.getUsername()));
+        assertTrue(newUser.getUsername().equals(userDTO.getUsername().toLowerCase()));
     }
     
     @Test

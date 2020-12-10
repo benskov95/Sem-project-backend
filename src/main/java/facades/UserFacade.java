@@ -97,6 +97,13 @@ public class UserFacade {
 
     public UserDTO addUser(UserDTO userDTO) throws  AuthenticationException {
 
+        if(userDTO.getPassword().length() < 4){
+            throw new AuthenticationException("Your password has to be 4 characters or more!");
+        }
+        if(userDTO.getUsername().length() < 2){
+            throw new AuthenticationException("Your username has to be 2 characters or more!");
+        }
+
         EntityManager em = emf.createEntityManager();
         User user = new User(userDTO.getUsername(), userDTO.getPassword());
         addInitialRoles(em);
